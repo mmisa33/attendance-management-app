@@ -1,0 +1,78 @@
+html,
+body {
+    height: 100%;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ヘッダー */
+.header {
+    display: grid;
+    align-items: center;
+    padding: 0px 30px;
+    min-height: 80px;
+    background-color: black;
+    border: 1px solid black;
+}
+
+.header__logo img {
+    width: 100%;
+    max-width: 370px;
+    height: auto;
+}
+
+/* コンテンツ */
+.content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 55px;
+}
+
+.content__heading {
+    text-align: center;
+    font-weight: bold;
+    font-size: 36px;
+}
+
+.error-message {
+    margin-top: 5px;
+    color: #FF5555;
+}
+
+/* レスポンシブデザイン (タブレット768px - 850px) */
+@media (max-width: 850px) and (min-width: 768px) {
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 40px;
+        min-height: 140px;
+        flex-wrap: wrap;
+    }
+
+    .header__logo {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .header--logo-only {
+        min-height: 80px;
+    }
+}
