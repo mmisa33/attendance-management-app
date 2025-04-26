@@ -5,5 +5,73 @@
     justify-content: center;
     height: 100vh;
     text-align: center;
+    background-color: #F0EFF2;
+}
 
+.attendance__status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    width: 100px;
+    height: 40px;
+    background-color: #C8C8C8;
+    border-radius: 50px;
+    color: #696969;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.attendance__date {
+    margin-bottom: 15px;
+    font-size: 40px;
+}
+
+.attendance__time {
+    margin-bottom: 75px;
+    font-weight: bold;
+    font-size: 80px;
+}
+
+.attendance__actions {
+    display: flex;
+    gap: 80px;
+}
+
+.attendance__form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 211px;
+    height: 77px;
+    background-color: black;
+    border-radius: 20px;
+
+}
+
+.attendance__form:not(.attendance__form--break) {
+    background-color: black;
+}
+
+.attendance__form--break {
+    background-color: white;
+}
+
+.attendance__button {
+    color: white;
+    font-weight: bold;
+    font-size: 32px;
+}
+
+.attendance__button--break {
+    color: black;
+}
+
+.attendance__button:not(.attendance__button--break) {
+    color: white;
+}
+
+.attendance__message {
+    font-weight: bold;
+    font-size: 26px;
 }

@@ -32,7 +32,7 @@
 
     {{-- 現在の時刻 --}}
     <div class="attendance__time">
-        <p>{{ $now->format('H:i') }}</p>
+        <p id="current-time">{{ $now->format('H:i') }}</p>
     </div>
 
     {{-- 出勤・退勤・休憩ボタン --}}
@@ -53,16 +53,16 @@
             </form>
 
             {{-- 休憩開始ボタン --}}
-            <form class="attendance__form" method="POST" action="{{ route('attendance.breakStart') }}">
+            <form class="attendance__form attendance__form--break" method="POST" action="{{ route('attendance.breakStart') }}">
                 @csrf
-                <button class="attendance__button" type="submit">休憩入</button>
+                <button class="attendance__button attendance__button--break" type="submit">休憩入</button>
             </form>
 
         {{-- 休憩終了ボタン --}}
         @elseif($attendance->status === '休憩中')
-            <form class="attendance__form" method="POST" action="{{ route('attendance.breakEnd') }}">
+            <form class="attendance__form attendance__form--break" method="POST" action="{{ route('attendance.breakEnd') }}">
                 @csrf
-                <button class="attendance__button" type="submit">休憩戻</button>
+                <button class="attendance__button attendance__button--break" type="submit">休憩戻</button>
             </form>
         @elseif($attendance->status === '退勤済')
             <p class="attendance__message">お疲れ様でした。</p>
@@ -70,4 +70,16 @@
 
     </div>
 </div>
+
+<script>
+    function updateTime() {
+        const timeElement = document.getElementById('current-time');
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        timeElement.textContent = `${hours}:${minutes}`;
+    }
+
+    setInterval(updateTime, 1000); // 1秒ごとに時刻を更新
+</script>
 @endsection
