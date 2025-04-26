@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Attendance;
-use App\Models\BreakTime;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -76,6 +74,6 @@ class AttendanceController extends Controller
             ]);
         }
 
-        return redirect()->route('attendance.index')->with('message', 'お疲れ様でした。');
+        return redirect()->route('attendance.index');
     }
 }

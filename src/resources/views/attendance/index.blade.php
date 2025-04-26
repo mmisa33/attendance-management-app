@@ -72,6 +72,7 @@
 </div>
 
 <script>
+    // 時間を自動で更新
     function updateTime() {
         const timeElement = document.getElementById('current-time');
         const now = new Date();
@@ -80,6 +81,6 @@
         timeElement.textContent = `${hours}:${minutes}`;
     }
 
-    setInterval(updateTime, 1000); // 1秒ごとに時刻を更新
+    setInterval(updateTime, 1000); // 1秒ごとに更新
 </script>
 @endsection

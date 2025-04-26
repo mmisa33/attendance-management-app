@@ -10,7 +10,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // ログインユーザー専用ページ
 Route::middleware(['auth'])->group(function () {
 
-    // 出勤管理ページ
+    // 出勤登録ページ
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn'])->name('attendance.clockIn');
     Route::post('/attendance/break-start', [AttendanceController::class, 'breakStart'])->name('attendance.breakStart');
