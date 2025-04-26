@@ -54,7 +54,6 @@ input[type="text"] {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    padding: 70px;
 }
 
 .content__heading {

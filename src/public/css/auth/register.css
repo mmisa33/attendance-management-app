@@ -1,4 +1,8 @@
-/* ユーザー登録フォーム */
+/* 会員登録フォーム */
+.register-form {
+    padding: 70px 20px;
+}
+
 .register-form__inner {
     display: flex;
     justify-content: center;

@@ -1,4 +1,8 @@
 /* ログインフォーム */
+.login-form {
+    padding: 90px 20px;
+}
+
 .login-form__inner {
     display: flex;
     justify-content: center;
