@@ -1,0 +1,63 @@
+/* ユーザー登録フォーム */
+.register-form__inner {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.register-form__form {
+    padding: 15px 30px;
+    width: 40vw;
+}
+
+.register-form__group {
+    margin-bottom: 35px;
+}
+
+.register-form__label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.register-form__input {
+    padding: 8px 12px;
+    width: 100%;
+    height: 45px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+}
+
+/* 下部リンク */
+.register-form__actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 100px auto 0;
+}
+
+.register-form__btn {
+    padding: 8px 0;
+    width: 100%;
+    height: 60px;
+    background-color: #000000;
+    border-radius: 5px;
+    font-size: 26px;
+    color: white;
+    font-weight: bold;
+}
+
+.register-form__link {
+    margin-top: 25px;
+    font-size: 20px;
+    color: #0073CC;
+}
+
+/* レスポンシブデザイン (タブレット768px - 850px) */
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .register-form__form {
+        width: 65vw;
+    }
+}
