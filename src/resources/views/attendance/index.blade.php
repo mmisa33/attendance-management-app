@@ -7,8 +7,8 @@
 @section('link')
 {{-- ヘッダーリンク --}}
 <div class="header__links">
-    <a class="header__link" href="">勤怠</a>
-    <a class="header__link" href="">勤怠一覧</a>
+    <a class="header__link" href="{{ route('attendance.index') }}">勤怠</a>
+    <a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a>
     <a class="header__link" href="">申請</a>
     <form action="{{ route('logout') }}" method="POST">
         @csrf
