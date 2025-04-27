@@ -24,56 +24,37 @@
 
     {{-- ナビ --}}
     <div class="attendance-list__nav">
-        <a href="{{ route('attendance.list', ['month' => $previousMonth]) }}" class="button">前月</a>
-        <h3>{{ $formattedMonth }}</h3>
-        <a href="{{ route('attendance.list', ['month' => $nextMonth]) }}" class="button">翌月</a>
+        <a href="{{ route('attendance.list', ['month' => $previousMonth]) }}" class="nav__button"><img src="{{ asset('images/icon/arrow-left.png') }}" alt="前月">前月</a>
+        <h3 class="nav__month"><img src="{{ asset('images/icon/calender.png') }}" alt="カレンダー">{{ $formattedMonth }}</h3>
+        <a href="{{ route('attendance.list', ['month' => $nextMonth]) }}" class="nav__button">翌月<img src="{{ asset('images/icon/arrow-right.png') }}" alt="翌月"></a>
     </div>
 
     {{-- 当月の勤怠情報一覧 --}}
     <table class="attendance-table">
-        @foreach ($attendances as $attendance)
+        <thead>
             <tr class="attendance-table__row">
                 <th class="attendance-table__header">日付</th>
-                <td class="attendance-table__content">
-                    {{ $attendance->formatted_date }}
-                </td>
-            </tr>
-
-            <tr class="attendance-table__row">
                 <th class="attendance-table__header">出勤</th>
-                <td class="attendance-table__content">
-                    {{ $attendance->start_time_formatted }}
-                </td>
-            </tr>
-
-            <tr class="attendance-table__row">
                 <th class="attendance-table__header">退勤</th>
-                <td class="attendance-table__content">
-                    {{ $attendance->end_time_formatted }}
-                </td>
-            </tr>
-
-            <tr class="attendance-table__row">
                 <th class="attendance-table__header">休憩</th>
-                <td class="attendance-table__content">
-                    {{ $attendance->total_break_time }}
-                </td>
-            </tr>
-
-            <tr class="attendance-table__row">
                 <th class="attendance-table__header">合計</th>
-                <td class="attendance-table__content">
-                    {{ $attendance->total_hours }}
-                </td>
-            </tr>
-
-            <tr class="attendance-table__row">
                 <th class="attendance-table__header">詳細</th>
-                <td class="attendance-table__content">
-                    <a href="{{ route('attendance.details', ['attendance' => $attendance->id]) }}" class="button">詳細</a>
-                </td>
             </tr>
-        @endforeach
+        </thead>
+        <tbody>
+            @foreach ($attendances as $attendance)
+                <tr class="attendance-table__row">
+                    <td class="attendance-table__content">{{ $attendance->formatted_date }}</td>
+                    <td class="attendance-table__content">{{ $attendance->start_time_formatted }}</td>
+                    <td class="attendance-table__content">{{ $attendance->end_time_formatted }}</td>
+                    <td class="attendance-table__content">{{ $attendance->total_break_time }}</td>
+                    <td class="attendance-table__content">{{ $attendance->total_hours }}</td>
+                    <td class="attendance-table__content">
+                        <a href="{{ route('attendance.details', ['attendance' => $attendance->id]) }}" class="content__details">詳細</a>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
     </table>
 </div>
 @endsection

@@ -88,59 +88,58 @@ class AttendanceController extends Controller
     {
         // 現在の月を取得
         $currentMonth = $request->input('month', Carbon::now()->format('Y-m'));
+
+        // 月の初日と最終日を計算
         $startOfMonth = Carbon::parse($currentMonth)->startOfMonth();
         $endOfMonth = Carbon::parse($currentMonth)->endOfMonth();
 
-        // 現在月の勤怠情報を取得
+        // 勤怠情報をデータベースから取得
         $attendances = Attendance::where('user_id', Auth::id())
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->get();
 
-        // 勤怠情報をフォーマット
         foreach ($attendances as $attendance) {
-            $attendance->formatted_date = Carbon::parse($attendance->date)->format('m/d(D)');
+            // 勤怠の日付をフォーマット
+            $date = Carbon::parse($attendance->date);
 
-            // 出勤時刻と退勤時刻のフォーマット
-            $attendance->start_time_formatted = $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '';
-            $attendance->end_time_formatted = $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '';
+            // 出勤時刻、退勤時刻をフォーマット
+            $attendance->formatted_date = $date->locale('ja')->format('m/d') . '(' . $date->isoFormat('ddd') . ')';
+            $attendance->start_time_formatted = $attendance->start_time
+                ? Carbon::parse($attendance->start_time)->format('H:i')
+                : ''; // 出勤時刻があれば時間フォーマット、なければ空文字
+            $attendance->end_time_formatted = $attendance->end_time
+                ? Carbon::parse($attendance->end_time)->format('H:i')
+                : ''; // 退勤時刻があれば時間フォーマット、なければ空文字
 
-            // 休憩時間の計算
-            $totalBreakTimeMinutes = 0;
-            if ($attendance->breakTimes && $attendance->breakTimes->isNotEmpty()) {
-                foreach ($attendance->breakTimes as $breakTime) {
-                    $breakStart = Carbon::parse($breakTime->break_start);
-                    $breakEnd = Carbon::parse($breakTime->break_end);
-                    $totalBreakTimeMinutes += $breakStart->diffInMinutes($breakEnd);
-                }
-            }
+            // 休憩時間合計（分単位）
+            $totalBreakMinutes = $attendance->breakTimes && $attendance->breakTimes->isNotEmpty()
+                ? $attendance->breakTimes->sum(function ($breakTime) {
+                    return Carbon::parse($breakTime->break_start)
+                        ->diffInMinutes(Carbon::parse($breakTime->break_end));
+                })
+                : 0;
 
-            // 休憩時間を時間:分形式に変換
-            $hours = floor($totalBreakTimeMinutes / 60);
-            $minutes = $totalBreakTimeMinutes % 60;
-            $attendance->total_break_time = sprintf('%02d:%02d', $hours, $minutes);
+            $attendance->total_break_time = floor($totalBreakMinutes / 60) . ':' . str_pad($totalBreakMinutes % 60, 2, '0', STR_PAD_LEFT);
 
-            // 合計労働時間
+            // 労働時間合計（分単位）
             if ($attendance->start_time && $attendance->end_time) {
-                $startTime = Carbon::parse($attendance->start_time);
-                $endTime = Carbon::parse($attendance->end_time);
-                $totalHours = $endTime->diffInHours($startTime);
-                $totalMinutes = $endTime->diffInMinutes($startTime) % 60;
+                $start = Carbon::parse($attendance->start_time);
+                $end = Carbon::parse($attendance->end_time);
+                $totalMinutes = $end->diffInMinutes($start);
 
-                // 合計労働時間を時間:分形式に変換
-                $attendance->total_hours = sprintf('%02d:%02d', $totalHours, $totalMinutes);
+                $attendance->total_hours = floor($totalMinutes / 60) . ':' . str_pad($totalMinutes % 60, 2, '0', STR_PAD_LEFT);
             } else {
-                $attendance->total_hours = '00:00'; // 出勤退勤がない場合
+                $attendance->total_hours = '0:00';
             }
         }
 
-        // フォーマットした月
+        // 当月の表示を変更
         $formattedMonth = Carbon::parse($currentMonth)->format('Y/m');
 
-        // 月の前後ボタン用に修正
+        // 前月、次月のURLを生成
         $previousMonth = Carbon::parse($currentMonth)->subMonth()->format('Y-m');
         $nextMonth = Carbon::parse($currentMonth)->addMonth()->format('Y-m');
 
-        // ビューに渡す
         return view('attendance.list', compact('attendances', 'currentMonth', 'previousMonth', 'nextMonth', 'formattedMonth'));
     }
 
