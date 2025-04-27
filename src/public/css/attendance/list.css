@@ -60,7 +60,7 @@ body {
 }
 
 /* 勤怠情報一覧テーブル */
-.attendance-table {
+.attendance-list__table {
     width: 100%;
     border-collapse: collapse;
     background-color: #FFFFFF;
@@ -72,17 +72,17 @@ body {
     table-layout: fixed;
 }
 
-.attendance-table__header {
+.attendance-list__header {
     padding: 10px 20px;
     border-bottom: 3px solid #E1E1E1;
 }
 
-.attendance-table__content {
+.attendance-list__content {
     padding: 10px 20px;
     border-bottom: 2px solid #E1E1E1;
 }
 
-.attendance-table tr:last-child td {
+.attendancee-list__table tr:last-child td {
     border-bottom: none;
 }
 

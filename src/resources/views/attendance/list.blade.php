@@ -30,26 +30,26 @@
     </div>
 
     {{-- 当月の勤怠情報一覧 --}}
-    <table class="attendance-table">
+    <table class="attendance-list__table">
         <thead>
-            <tr class="attendance-table__row">
-                <th class="attendance-table__header">日付</th>
-                <th class="attendance-table__header">出勤</th>
-                <th class="attendance-table__header">退勤</th>
-                <th class="attendance-table__header">休憩</th>
-                <th class="attendance-table__header">合計</th>
-                <th class="attendance-table__header">詳細</th>
+            <tr class="attendance-list__row">
+                <th class="attendance-list__header">日付</th>
+                <th class="attendance-list__header">出勤</th>
+                <th class="attendance-list__header">退勤</th>
+                <th class="attendance-list__header">休憩</th>
+                <th class="attendance-list__header">合計</th>
+                <th class="attendance-list__header">詳細</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($attendances as $attendance)
-                <tr class="attendance-table__row">
-                    <td class="attendance-table__content">{{ $attendance->formatted_date }}</td>
-                    <td class="attendance-table__content">{{ $attendance->start_time_formatted }}</td>
-                    <td class="attendance-table__content">{{ $attendance->end_time_formatted }}</td>
-                    <td class="attendance-table__content">{{ $attendance->total_break_time }}</td>
-                    <td class="attendance-table__content">{{ $attendance->total_hours }}</td>
-                    <td class="attendance-table__content">
+                <tr class="attendance-list__row">
+                    <td class="attendance-list__content">{{ $attendance->formatted_date }}</td>
+                    <td class="attendance-list__content">{{ $attendance->start_time_formatted }}</td>
+                    <td class="attendance-list__content">{{ $attendance->end_time_formatted }}</td>
+                    <td class="attendance-list__content">{{ $attendance->total_break_time }}</td>
+                    <td class="attendance-list__content">{{ $attendance->total_hours }}</td>
+                    <td class="attendance-list__content">
                         <a href="{{ route('attendance.details', ['attendance' => $attendance->id]) }}" class="content__details">詳細</a>
                     </td>
                 </tr>

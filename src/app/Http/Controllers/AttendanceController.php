@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Http\Requests\AttendanceDetailRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -146,7 +147,21 @@ class AttendanceController extends Controller
     // 勤怠詳細ページを表示
     public function attendanceDetails($attendanceId)
     {
+        // ログインユーザーの勤怠情報を取得
         $attendance = Attendance::where('user_id', Auth::id())->findOrFail($attendanceId);
-        return view('attendance.details', compact('attendance'));
+
+        // 休憩時間の情報をリレーションで取得
+        $breakTimes = $attendance->breakTimes;
+
+        // 日付を「YYYY年」と「n月j日」に分けてフォーマット
+        $date = Carbon::parse($attendance->date);
+        $attendance->formatted_year     = $date->format('Y') . '年';
+        $attendance->formatted_monthday = $date->format('n') . '月' . $date->format('j') . '日';
+
+        // 勤怠詳細画面を表示
+        return view('attendance.details', [
+            'attendance' => $attendance,
+            'breakTimes' => $breakTimes,
+        ]);
     }
 }

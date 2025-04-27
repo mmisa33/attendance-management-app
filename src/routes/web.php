@@ -22,4 +22,7 @@ Route::middleware(['auth'])->group(function () {
 
     // 勤怠詳細画面
     Route::get('/attendance/details/{attendance}', [AttendanceController::class, 'attendanceDetails'])->name('attendance.details');
+
+    // 勤怠詳細更新申請
+    Route::post('/attendance/details/{attendance}/update', [AttendanceController::class, 'updateDetail'])->name('attendance.updateDetail');
 });
