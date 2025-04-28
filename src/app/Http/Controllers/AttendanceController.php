@@ -164,4 +164,29 @@ class AttendanceController extends Controller
             'breakTimes' => $breakTimes,
         ]);
     }
+
+    // 勤怠内容の修正を申請
+    public function updateDetail(AttendanceDetailRequest $request, $attendanceId)
+    {
+        $validated = $request->validated();
+
+        // 勤怠データ取得
+        $attendance = Attendance::where('user_id', Auth::id())->findOrFail($attendanceId);
+
+        // 出勤・退勤時間を更新
+        $attendance->start_time = $attendance->date . ' ' . $validated['start_time'] . ':00';
+        $attendance->end_time   = $attendance->date . ' ' . $validated['end_time'] . ':00';
+        $attendance->note       = $validated['note'] ?? null;
+        $attendance->save();
+
+        // 休憩時間を更新
+        foreach ($attendance->breakTimes as $i => $breakTime) {
+            $breakTime->break_start = $attendance->date . ' ' . ($validated['break_start'][$i] ?? '00:00') . ':00';
+            $breakTime->break_end   = $attendance->date . ' ' . ($validated['break_end'][$i] ?? '00:00') . ':00';
+            $breakTime->save();
+        }
+
+        // 更新後、申請一覧ページにリダイレクト
+        return redirect()->route('stamp_correction_request.list');
+    }
 }

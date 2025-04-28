@@ -1,0 +1,104 @@
+body {
+    background-color: #F0EFF2;
+}
+
+.attendance-detail {
+    text-align: center;
+    width: 70vw;
+    margin: 0 auto;
+    padding: 80px 60px;
+}
+
+/* ページタイトル */
+.attendance-detail__heading {
+    display: flex;
+    align-items: center;
+    margin-bottom: 90px;
+    padding-left: 20px;
+    height: 40px;
+    border-left: 8px solid;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+/* 勤怠情報一覧テーブル */
+.attendance-detail__table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    text-align: left;
+    border: 1px solid #E1E1E1;
+}
+
+.attendance-detail__header,
+.attendance-detail__content {
+    border-bottom: 2px solid #E1E1E1;
+}
+
+.attendance-detail__header {
+    width: 35%;
+    padding: 40px 60px;
+    color: #737373;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.attendance-detail__content {
+    width: 65%;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.attendance-detail__table tr:last-child td,
+.attendance-detail__table tr:last-child th {
+    border-bottom: none;
+}
+
+.attendance-detail__header--name,
+.attendance-detail__header--date {
+    padding-left: 30px;
+}
+
+.attendance-detail__content--name {
+    padding-left: 30px;
+}
+
+.content__year {
+    margin-right: 12vw;
+    padding-left: 30px;
+}
+
+/* 時間入力フィールドの縦方向の中央揃え */
+.attendance-detail__content--time input {
+    width: 100px;
+    height: 30px;
+    border: 1px solid #E1E1E1;
+    text-align: center;
+    border-radius: 4px;
+}
+
+/* ～ の調整 */
+.content__time-separator {
+    margin: 0 4vw;
+}
+
+.content__textarea {
+    width: 60%;
+    padding: 8px 10px;
+    border: 1px solid #D9D9D9;
+    border-radius: 4px;
+    resize: none;
+}
+
+/* レスポンシブデザイン (タブレット768px - 850px) */
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .attendance-detail {
+        width: 85vw;
+    }
+
+    .content__year {
+        margin-right: 5vw;
+    }
+}

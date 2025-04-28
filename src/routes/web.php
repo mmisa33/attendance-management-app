@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\StampCorrectionRequestController;
 use Illuminate\Support\Facades\Route;
 
 // ログアウト処理
@@ -22,7 +23,8 @@ Route::middleware(['auth'])->group(function () {
 
     // 勤怠詳細画面
     Route::get('/attendance/details/{attendance}', [AttendanceController::class, 'attendanceDetails'])->name('attendance.details');
-
-    // 勤怠詳細更新申請
     Route::post('/attendance/details/{attendance}/update', [AttendanceController::class, 'updateDetail'])->name('attendance.updateDetail');
+
+    // 申請一覧ページ
+    Route::get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'index'])->name('stamp_correction_request.list');
 });
