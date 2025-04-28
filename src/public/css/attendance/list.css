@@ -82,7 +82,7 @@ body {
     border-bottom: 2px solid #E1E1E1;
 }
 
-.attendancee-list__table tr:last-child td {
+.attendance-list__table tr:last-child td {
     border-bottom: none;
 }
 
