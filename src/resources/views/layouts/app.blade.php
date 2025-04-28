@@ -16,10 +16,7 @@
         <header class="header {{ View::hasSection('link') ? '' : 'header--logo-only' }}">
             {{--  サイトタイトル  --}}
             <div class="header__logo">
-                {{-- 後にルート設定 --}}
-                <a href="/">
-                    <img src="{{ asset('images/logo.svg') }}" alt="coachtech 勤怠管理アプリ">
-                </a>
+                <img src="{{ asset('images/logo.svg') }}" alt="coachtech 勤怠管理アプリ">
             </div>
 
             {{--  ヘッダーリンク   --}}
