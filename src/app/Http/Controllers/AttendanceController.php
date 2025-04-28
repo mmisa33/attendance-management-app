@@ -177,7 +177,8 @@ class AttendanceController extends Controller
         // 出勤・退勤時間を更新
         $attendance->start_time = $attendance->date . ' ' . $validated['start_time'] . ':00';
         $attendance->end_time   = $attendance->date . ' ' . $validated['end_time'] . ':00';
-        $attendance->note       = $validated['note'] ?? null;
+        $attendance->note       = $validated['note'];
+        $attendance->is_modified = true;
         $attendance->save();
 
         // 休憩時間を更新

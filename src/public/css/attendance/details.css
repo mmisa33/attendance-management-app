@@ -92,6 +92,14 @@ body {
     resize: none;
 }
 
+.alert-message {
+    margin-top: 15px;
+    text-align: right;
+    color: #FF000080;
+    font-weight: 800;
+    font-size: 18px;
+}
+
 /* レスポンシブデザイン (タブレット768px - 850px) */
 @media screen and (min-width: 768px) and (max-width: 850px) {
     .attendance-detail {
