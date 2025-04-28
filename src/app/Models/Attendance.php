@@ -9,7 +9,7 @@ class Attendance extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'date', 'status', 'start_time', 'end_time', 'is_modified', 'is_approved'];
+    protected $fillable = ['user_id', 'date', 'status', 'start_time', 'end_time', 'note', 'is_modified', 'is_approved'];
 
     public function breakTimes()
     {

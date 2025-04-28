@@ -24,6 +24,8 @@ class AttendanceDetailRequest extends FormRequest
     public function rules()
     {
         return [
+            'start_time'    => ['required', 'date_format:H:i'],
+            'end_time'      => ['required', 'date_format:H:i'],
             'break_start'  => ['array'],
             'break_end'    => ['array'],
             'note'         => ['required'],
@@ -40,8 +42,8 @@ class AttendanceDetailRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $startTime = $this->input('start_time');
-            $endTime = $this->input('end_time');
+            $startTime = $validated['start_time'] ?? null;
+            $endTime = $validated['end_time'] ?? null;
             $breakStarts = $this->input('break_start', []);
             $breakEnds = $this->input('break_end', []);
 
