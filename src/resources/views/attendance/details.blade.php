@@ -43,7 +43,8 @@
             {{-- 出勤・退勤 --}}
             <tr class="attendance-detail__row">
                 <th class="attendance-detail__header">出勤・退勤</th>
-                <td class="attendance-detail__content attendance-detail__content--time">
+                <td class="attendance-detail__content attendance-detail__content--time 
+                    @if($attendance->is_modified) modified @endif">
                     <input type="text" name="start_time" id="start_time" value="{{ old('start_time', substr($attendance->start_time, 11, 5)) }}" pattern="\d{2}:\d{2}" placeholder="hh:mm" class="content__time" @if($attendance->is_modified) disabled @endif>
                     <span class="content__time-separator">～</span>
                     <input type="text" name="end_time" id="end_time" value="{{ old('end_time', substr($attendance->end_time, 11, 5)) }}" pattern="\d{2}:\d{2}" placeholder="hh:mm" class="content__time" @if($attendance->is_modified) disabled @endif>
@@ -59,7 +60,8 @@
             {{-- 休憩レコード --}}
             <tr class="attendance-detail__row">
                 <th class="attendance-detail__header">休憩</th>
-                <td class="attendance-detail__content attendance-detail__content--time">
+                <td class="attendance-detail__content attendance-detail__content--time
+                    @if($attendance->is_modified) modified @endif">
                     @foreach($breakTimes as $i => $break)
                         <div class="break-row">
                             <input type="text" name="break_start[{{ $i }}]" value="{{ old('break_start.' . $i, substr($break->break_start, 11, 5)) }}" pattern="\d{2}:\d{2}" placeholder="hh:mm" class="content__time" @if($attendance->is_modified) disabled @endif>
@@ -83,7 +85,8 @@
             {{-- 備考 --}}
             <tr class="attendance-detail__row">
                 <th class="attendance-detail__header" for="note">備考</th>
-                <td class="attendance-detail__content attendance-detail__content--textarea">
+                <td class="attendance-detail__content attendance-detail__content--textarea
+                    @if($attendance->is_modified) modified @endif">
                     <textarea class="content__textarea" name="note" id="note" rows="2" @if($attendance->is_modified) disabled @endif>{{ old('note', $attendance->note) }}</textarea>
                     @error('note')
                         <div class="error-message">{{ $message }}</div>

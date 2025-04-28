@@ -69,7 +69,6 @@ body {
     width: 45%;
 }
 
-/* 時間入力フィールドの縦方向の中央揃え */
 .attendance-detail__content--time input {
     display: inline-block;
     width: 19%;
@@ -79,7 +78,6 @@ body {
     border-radius: 4px;
 }
 
-/* ～ の調整 */
 .content__time-separator {
     display: inline-block;
     width: 20%;
@@ -94,6 +92,7 @@ body {
     resize: none;
 }
 
+/* 修正ボタン */
 .attendance-detail__button {
     width: 130px;
     height: 50px;
@@ -104,6 +103,19 @@ body {
     color: #FFFFFF;
     font-weight: bold;
     font-size: 22px;
+}
+
+/* 申請中 */
+.attendance-detail__content.modified input,
+.attendance-detail__content--textarea.modified .content__textarea {
+    border: none;
+    color: #000000;
+}
+
+.attendance-detail__content--textarea.modified .content__textarea {
+    padding: 8px 35px;
+    height: 60px;
+    line-height: 40px;
 }
 
 .alert-message {
