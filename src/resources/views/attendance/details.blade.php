@@ -68,17 +68,17 @@
                             <span class="content__time-separator">～</span>
                             <input type="text" name="break_end[{{ $i }}]" value="{{ old('break_end.' . $i, substr($break->break_end, 11, 5)) }}" pattern="\d{2}:\d{2}" placeholder="hh:mm" class="content__time" @if($attendance->is_modified) disabled @endif>
                         </div>
+                        @if($errors->has("break_start.$i"))
+                            <div class="error-message">
+                                {{ $errors->first("break_start.$i") }}
+                            </div>
+                        @endif
+                        @if($errors->has("break_end.$i"))
+                            <div class="error-message">
+                                {{ $errors->first("break_end.$i") }}
+                            </div>
+                        @endif
                     @endforeach
-                    @if($errors->has("break_start.$i"))
-                        <div class="error-message">
-                            {{ $errors->first("break_start.$i") }}
-                        </div>
-                    @endif
-                    @if($errors->has("break_end.$i"))
-                        <div class="error-message">
-                            {{ $errors->first("break_end.$i") }}
-                        </div>
-                    @endif
                 </td>
             </tr>
 
