@@ -20,7 +20,9 @@ class CreateAttendancesTable extends Migration
             $table->string('status')->default('勤務外'); // 勤務ステータス
             $table->timestamp('start_time')->nullable(); // 出勤時刻
             $table->timestamp('end_time')->nullable(); // 退勤時刻
-            $table->timestamps(); // created_at と updated_at を自動的に追加
+            $table->boolean('is_modified')->default(false); // 修正申請フラグ
+            $table->boolean('is_approved')->default(false);  // 承認フラグ
+            $table->timestamps();
         });
     }
 

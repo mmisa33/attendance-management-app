@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\StampCorrectionRequestController;
+use App\Http\Controllers\AttendanceModificationController;
 use Illuminate\Support\Facades\Route;
 
 // ログアウト処理
@@ -26,5 +26,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/attendance/details/{attendance}/update', [AttendanceController::class, 'updateDetail'])->name('attendance.updateDetail');
 
     // 申請一覧ページ
-    Route::get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'index'])->name('stamp_correction_request.list');
+    Route::get('/stamp_correction_request/list', [AttendanceModificationController::class, 'list'])->name('stamp_correction_request.list');
+    Route::get('/stamp_correction_request/{attendance}/details', [AttendanceModificationController::class, 'details'])->name('stamp_correction_request.details');
 });
