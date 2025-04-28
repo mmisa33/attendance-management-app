@@ -22,8 +22,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/attendance/list', [AttendanceController::class, 'attendanceList'])->name('attendance.list');
 
     // 勤怠詳細画面
-    Route::get('/attendance/details/{attendance}', [AttendanceController::class, 'attendanceDetails'])->name('attendance.details');
-    Route::post('/attendance/details/{attendance}/update', [AttendanceController::class, 'updateDetail'])->name('attendance.updateDetail');
+    Route::get('/attendance/{attendance}', [AttendanceController::class, 'attendanceDetails'])->name('attendance.details');
+    Route::post('/attendance/{attendance}/update', [AttendanceController::class, 'updateDetail'])->name('attendance.updateDetail');
 
     // 申請一覧ページ
     Route::get('/stamp_correction_request/list', [AttendanceModificationController::class, 'list'])->name('stamp_correction_request.list');

@@ -97,6 +97,7 @@ class AttendanceController extends Controller
         // 勤怠情報をデータベースから取得
         $attendances = Attendance::where('user_id', Auth::id())
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
+            ->orderBy('date', 'asc')
             ->get();
 
         foreach ($attendances as $attendance) {
