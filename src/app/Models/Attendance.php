@@ -11,6 +11,11 @@ class Attendance extends Model
 
     protected $fillable = ['user_id', 'date', 'status', 'start_time', 'end_time', 'note', 'is_modified', 'is_approved'];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function breakTimes()
     {
         return $this->hasMany(BreakTime::class);

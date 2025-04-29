@@ -27,5 +27,4 @@ Route::middleware(['auth'])->group(function () {
 
     // 申請一覧ページ
     Route::get('/stamp_correction_request/list', [AttendanceModificationController::class, 'list'])->name('stamp_correction_request.list');
-    Route::get('/stamp_correction_request/{attendance}/details', [AttendanceModificationController::class, 'details'])->name('stamp_correction_request.details');
 });
