@@ -13,6 +13,7 @@
     <div class="login-form__inner">
         <form class="login-form__form" action="{{ route('login') }}" method="POST" novalidate>
             @csrf
+
             {{-- メールアドレス入力 --}}
             <div class="login-form__group">
                 <label class="login-form__label" for="email">メールアドレス</label>

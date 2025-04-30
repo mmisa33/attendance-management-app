@@ -1,31 +1,31 @@
-/* ログインフォーム */
-.login-form {
+/* 管理者ログインフォーム */
+.admin-form {
     padding: 90px 20px;
 }
 
-.login-form__inner {
+.admin-form__inner {
     display: flex;
     justify-content: center;
     margin-top: 50px;
 }
 
-.login-form__form {
+.admin-form__form {
     padding: 15px 30px;
     width: 40vw;
 }
 
-.login-form__group {
+.admin-form__group {
     margin-bottom: 70px;
 }
 
-.login-form__label {
+.admin-form__label {
     display: block;
     margin-bottom: 5px;
     font-size: 24px;
     font-weight: bold;
 }
 
-.login-form__input {
+.admin-form__input {
     padding: 8px 12px;
     width: 100%;
     height: 60px;
@@ -34,12 +34,15 @@
 }
 
 /* 下部リンク */
-.login-form__actions {
-    text-align: center;
+.admin-form__actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     margin: 120px auto 0;
 }
 
-.login-form__btn {
+.admin-form__btn {
     padding: 8px 0;
     width: 100%;
     height: 60px;
@@ -50,8 +53,7 @@
     font-weight: bold;
 }
 
-.login-form__link {
-    display: inline-block;
+.admin-form__link {
     margin-top: 25px;
     font-size: 20px;
     color: #0073CC;
@@ -59,7 +61,7 @@
 
 /* レスポンシブデザイン (タブレット768px - 850px) */
 @media screen and (min-width: 768px) and (max-width: 850px) {
-    .login-form__form {
+    .admin-form__form {
         width: 65vw;
     }
 }

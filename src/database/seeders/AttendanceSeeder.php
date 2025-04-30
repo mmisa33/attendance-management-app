@@ -3,10 +3,11 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Attendance;
 use App\Models\BreakTime;
+use App\Models\User;
 
 class AttendanceSeeder extends Seeder
 {
@@ -17,6 +18,13 @@ class AttendanceSeeder extends Seeder
      */
     public function run()
     {
+        User::create([
+            'name' => 'テストユーザー',
+            'email' => 'user@example.com',
+            'password' => Hash::make('password123'),
+            'is_admin' => false,
+        ]);
+
         // 2025年4月の10日分の出勤データを作成
         foreach (range(1, 10) as $i) {
             // ランダムな出勤時刻と退勤時刻を生成

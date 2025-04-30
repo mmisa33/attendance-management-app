@@ -26,6 +26,10 @@ return new class extends Migration
                     ->after('two_factor_recovery_codes')
                     ->nullable();
             }
+
+            $table->boolean('is_admin')
+                ->after('two_factor_confirmed_at')
+                ->default(false);
         });
     }
 
@@ -38,6 +42,7 @@ return new class extends Migration
             $table->dropColumn(array_merge([
                 'two_factor_secret',
                 'two_factor_recovery_codes',
+                'is_admin',
             ], Fortify::confirmsTwoFactorAuthentication() ? [
                 'two_factor_confirmed_at',
             ] : []));
