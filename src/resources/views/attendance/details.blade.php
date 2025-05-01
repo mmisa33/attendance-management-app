@@ -7,13 +7,25 @@
 @section('link')
 {{-- ヘッダーリンク --}}
 <div class="header__links">
-    <a class="header__link" href="{{ route('attendance.index') }}">勤怠</a>
-    <a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a>
-    <a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a>
-    <form action="{{ route('logout') }}" method="POST">
-        @csrf
-        <input class="header__link" type="submit" value="ログアウト">
-    </form>
+    {{-- 管理者用 --}}
+    @if(Auth::guard('admin')->check())
+        <a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a>
+        <a class="header__link" href="">スタッフ一覧</a>
+        <a class="header__link" href="">申請一覧</a>
+        <form action="{{ route('admin.logout') }}" method="POST">
+            @csrf
+            <input class="header__link" type="submit" value="ログアウト">
+        </form>
+    {{-- 一般ユーザー用 --}}
+    @else
+        <a class="header__link" href="{{ route('attendance.index') }}">勤怠</a>
+        <a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a>
+        <a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a>
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <input class="header__link" type="submit" value="ログアウト">
+        </form>
+    @endif
 </div>
 @endsection
 

@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class AttendanceController extends Controller
+class UserAttendanceController extends Controller
 {
     // 勤怠登録ページを表示
     public function index()
@@ -190,11 +190,5 @@ class AttendanceController extends Controller
 
         // 更新後、申請一覧ページにリダイレクト
         return redirect()->route('stamp_correction_request.list');
-    }
-
-    // 管理者用勤怠一覧ページを表示
-    public function adminAttendanceList()
-    {
-        return view('admin.attendance.list');
     }
 }
