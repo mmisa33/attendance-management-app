@@ -28,10 +28,24 @@ class AttendanceDetailController extends Controller
         $attendance->formatted_year     = $date->format('Y') . '年';
         $attendance->formatted_monthday = $date->format('n') . '月' . $date->format('j') . '日';
 
+        // 休憩のデータを整形（休憩の数とタイトルを動的に設定）
+        $breakTimes = $attendance->breakTimes;
+        $breakCount = count($breakTimes);
+        $breakRows = [];
+
+        // 休憩データを整形して格納
+        for ($i = 0; $i < $breakCount + 1; $i++) {
+            $breakRows[] = [
+                'index' => $i,
+                'start' => old("break_start.$i", isset($attendance->breakTimes[$i]) ? substr($attendance->breakTimes[$i]->break_start, 11, 5) : ''),
+                'end' => old("break_end.$i", isset($attendance->breakTimes[$i]) ? substr($attendance->breakTimes[$i]->break_end, 11, 5) : '')
+            ];
+        }
+
         return view('attendance.details', [
             'user' => $user,
             'attendance' => $attendance,
-            'breakTimes' => $attendance->breakTimes,
+            'breakRows' => $breakRows,
         ]);
     }
 
@@ -67,10 +81,32 @@ class AttendanceDetailController extends Controller
         $attendance->save();
 
         // 休憩時間の更新
+        // 既存のbreakTimeを更新
         foreach ($attendance->breakTimes as $i => $breakTime) {
-            $breakTime->break_start = $attendance->date . ' ' . ($validated['break_start'][$i] ?? '00:00') . ':00';
-            $breakTime->break_end = $attendance->date . ' ' . ($validated['break_end'][$i] ?? '00:00') . ':00';
-            $breakTime->save();
+            $startInput = $validated['break_start'][$i] ?? null;
+            $endInput = $validated['break_end'][$i] ?? null;
+
+            if ($startInput && $endInput) {
+                $breakTime->break_start = $attendance->date . ' ' . $startInput . ':00';
+                $breakTime->break_end = $attendance->date . ' ' . $endInput . ':00';
+                $breakTime->save();
+            }
+        }
+
+        // 新規休憩時間を追加
+        $existingCount = count($attendance->breakTimes);
+        $additionalStarts = array_slice($validated['break_start'], $existingCount);
+        $additionalEnds = array_slice($validated['break_end'], $existingCount);
+
+        foreach ($additionalStarts as $i => $start) {
+            $end = $additionalEnds[$i] ?? null;
+
+            if ($start && $end) {
+                $attendance->breakTimes()->create([
+                    'break_start' => $attendance->date . ' ' . $start . ':00',
+                    'break_end' => $attendance->date . ' ' . $end . ':00',
+                ]);
+            }
         }
 
         // リダイレクト先に移動

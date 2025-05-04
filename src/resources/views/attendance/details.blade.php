@@ -33,7 +33,7 @@
 <div class="attendance-detail">
     <h2 class="attendance-detail__heading">勤怠詳細</h2>
 
-    <form class="attendance-detail__form" method="POST" action="{{ route('attendance.updateDetail', ['attendance' => $attendance->id]) }}">
+    <form class="attendance-detail__form" method="POST" action="{{ route('attendance.updateDetail', ['attendance' => $attendance->id]) }}"  novalidate>
         @csrf
 
         <table class="attendance-detail__table">
@@ -64,9 +64,9 @@
                 <th class="attendance-detail__header">出勤・退勤</th>
                 <td class="attendance-detail__content attendance-detail__content--time
                     @if($attendance->is_modified) modified @endif">
-                    <input type="text" name="start_time" id="start_time" value="{{ old('start_time', substr($attendance->start_time, 11, 5)) }}" pattern="\d{2}:\d{2}" placeholder="hh:mm" class="content__time" @if($attendance->is_modified) disabled @endif>
+                    <input type="text" name="start_time" id="start_time" value="{{ old('start_time', substr($attendance->start_time, 11, 5)) }}" pattern="\d{2}:\d{2}" class="content__time" @if($attendance->is_modified) disabled @endif>
                     <span class="content__time-separator">～</span>
-                    <input type="text" name="end_time" id="end_time" value="{{ old('end_time', substr($attendance->end_time, 11, 5)) }}" pattern="\d{2}:\d{2}" placeholder="hh:mm" class="content__time" @if($attendance->is_modified) disabled @endif>
+                    <input type="text" name="end_time" id="end_time" value="{{ old('end_time', substr($attendance->end_time, 11, 5)) }}" pattern="\d{2}:\d{2}" class="content__time" @if($attendance->is_modified) disabled @endif>
                     @error('start_time')
                         <div class="error-message">{{ $message }}</div>
                     @enderror
@@ -77,29 +77,48 @@
             </tr>
 
             {{-- 休憩レコード --}}
-            <tr class="attendance-detail__row">
-                <th class="attendance-detail__header">休憩</th>
-                <td class="attendance-detail__content attendance-detail__content--time
-                    @if($attendance->is_modified) modified @endif">
-                    @foreach($breakTimes as $i => $break)
-                        <div class="break-row">
-                            <input type="text" name="break_start[{{ $i }}]" value="{{ old('break_start.' . $i, substr($break->break_start, 11, 5)) }}" pattern="\d{2}:\d{2}" placeholder="hh:mm" class="content__time" @if($attendance->is_modified) disabled @endif>
+            @foreach ($breakRows as $breakRow)
+                <tr class="attendance-detail__row">
+                    <th class="attendance-detail__header">
+                        {{-- 休憩1の場合は「休憩」それ以外は「休憩2」「休憩3」 --}}
+                        @if ($breakRow['index'] == 0)
+                            休憩
+                        @else
+                            休憩{{ $breakRow['index'] + 1 }}
+                        @endif
+                    </th>
+                    <td class="attendance-detail__content attendance-detail__content--time
+                        @if($attendance->is_modified) modified @endif">
+
+                        <input type="text" name="break_start[{{ $breakRow['index'] }}]"
+                            value="{{ $breakRow['start'] }}"
+                            pattern="\d{2}:\d{2}"
+                            class="content__time"
+                            @if($attendance->is_modified) disabled @endif>
+
+                        @if (!$attendance->is_modified || $breakRow['start'])
                             <span class="content__time-separator">～</span>
-                            <input type="text" name="break_end[{{ $i }}]" value="{{ old('break_end.' . $i, substr($break->break_end, 11, 5)) }}" pattern="\d{2}:\d{2}" placeholder="hh:mm" class="content__time" @if($attendance->is_modified) disabled @endif>
-                        </div>
-                        @if($errors->has("break_start.$i"))
+                        @endif
+
+                        <input type="text" name="break_end[{{ $breakRow['index'] }}]"
+                            value="{{ $breakRow['end'] }}"
+                            pattern="\d{2}:\d{2}"
+                            class="content__time"
+                            @if($attendance->is_modified) disabled @endif>
+
+                        @if ($errors->has("break_start.{$breakRow['index']}"))
                             <div class="error-message">
-                                {{ $errors->first("break_start.$i") }}
+                                {{ $errors->first("break_start.{$breakRow['index']}") }}
                             </div>
                         @endif
-                        @if($errors->has("break_end.$i"))
+                        @if ($errors->has("break_end.{$breakRow['index']}"))
                             <div class="error-message">
-                                {{ $errors->first("break_end.$i") }}
+                                {{ $errors->first("break_end.{$breakRow['index']}") }}
                             </div>
                         @endif
-                    @endforeach
-                </td>
-            </tr>
+                    </td>
+                </tr>
+            @endforeach
 
             {{-- 備考 --}}
             <tr class="attendance-detail__row">
