@@ -8,7 +8,7 @@
 {{-- ヘッダーリンク --}}
 <div class="header__links">
     {{-- 管理者用 --}}
-    @if(Auth::guard('admin')->check())
+    @if(auth()->guard('admin')->check())
         <a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a>
         <a class="header__link" href="">スタッフ一覧</a>
         <a class="header__link" href="">申請一覧</a>
@@ -17,7 +17,7 @@
             <input class="header__link" type="submit" value="ログアウト">
         </form>
     {{-- 一般ユーザー用 --}}
-    @else
+    @elseif(auth()->guard('web')->check())
         <a class="header__link" href="{{ route('attendance.index') }}">勤怠</a>
         <a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a>
         <a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a>
@@ -40,7 +40,14 @@
             {{-- 名前 --}}
             <tr class="attendance-detail__row">
                 <th class="attendance-detail__header">名前</th>
-                <td class="attendance-detail__content attendance-detail__content--name">{{ Auth::user()->name }}</td>
+                <td class="attendance-detail__content attendance-detail__content--name">
+                    {{-- 管理者はユーザーの情報を表示、一般ユーザーは自分の情報 --}}
+                    @if(Auth::guard('admin')->check())
+                        {{ $user->name }}  {{-- 管理者が他のユーザーの勤怠を見ているので選択されたユーザー名を表示 --}}
+                    @elseif(Auth::guard('web')->check())
+                        {{ $user->name }}  {{-- 一般ユーザーは自分の名前を表示 --}}
+                    @endif
+                </td>
             </tr>
 
             {{-- 日付 --}}
@@ -55,7 +62,7 @@
             {{-- 出勤・退勤 --}}
             <tr class="attendance-detail__row">
                 <th class="attendance-detail__header">出勤・退勤</th>
-                <td class="attendance-detail__content attendance-detail__content--time 
+                <td class="attendance-detail__content attendance-detail__content--time
                     @if($attendance->is_modified) modified @endif">
                     <input type="text" name="start_time" id="start_time" value="{{ old('start_time', substr($attendance->start_time, 11, 5)) }}" pattern="\d{2}:\d{2}" placeholder="hh:mm" class="content__time" @if($attendance->is_modified) disabled @endif>
                     <span class="content__time-separator">～</span>

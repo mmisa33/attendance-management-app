@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\UserAttendanceController;
 use App\Http\Controllers\AdminAttendanceController;
 use App\Http\Controllers\AttendanceModificationController;
+use App\Http\Controllers\Shared\AttendanceDetailController;
 use Illuminate\Support\Facades\Route;
 
 // 一般ユーザー用ログイン
@@ -36,12 +37,17 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/attendance/break-end', [UserAttendanceController::class, 'breakEnd'])->name('attendance.breakEnd');
     Route::post('/attendance/clock-out', [UserAttendanceController::class, 'clockOut'])->name('attendance.clockOut');
     Route::get('/attendance/list', [UserAttendanceController::class, 'attendanceList'])->name('attendance.list');
-    Route::get('/attendance/{attendance}', [UserAttendanceController::class, 'attendanceDetails'])->name('attendance.details');
     Route::post('/attendance/{attendance}/update', [UserAttendanceController::class, 'updateDetail'])->name('attendance.updateDetail');
     Route::get('/stamp_correction_request/list', [AttendanceModificationController::class, 'list'])->name('stamp_correction_request.list');
 });
 
 // 管理者専用ページ
-Route::prefix('admin')->middleware('auth:admin')->group(function () {
-    Route::get('/attendance/list', [AdminAttendanceController::class, 'adminAttendanceList'])->name('admin.attendance.list');
+Route::middleware('auth:admin')->group(function () {
+    Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'adminAttendanceList'])->name('admin.attendance.list');
+});
+
+// 一般ユーザーと管理者の両方がアクセス可能
+Route::middleware(['auth.either'])->group(function () {
+    // 勤怠詳細ページ
+    Route::get('/attendance/{attendance}', [AttendanceDetailController::class, 'show'])->name('attendance.details');
 });

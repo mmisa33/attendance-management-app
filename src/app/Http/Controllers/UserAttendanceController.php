@@ -87,6 +87,10 @@ class UserAttendanceController extends Controller
     // 勤怠一覧ページを表示
     public function attendanceList(Request $request)
     {
+        if (!Auth::guard('web')->check()) {
+            return redirect()->route('login');
+        }
+
         // 現在の月を取得
         $currentMonth = $request->input('month', Carbon::now()->format('Y-m'));
 
@@ -145,26 +149,27 @@ class UserAttendanceController extends Controller
         return view('attendance.list', compact('attendances', 'currentMonth', 'previousMonth', 'nextMonth', 'formattedMonth'));
     }
 
-    // 勤怠詳細ページを表示
-    public function attendanceDetails($attendanceId)
-    {
-        // ログインユーザーの勤怠情報を取得
-        $attendance = Attendance::where('user_id', Auth::id())->findOrFail($attendanceId);
+    // // 勤怠詳細ページを表示
+    // public function attendanceDetails($attendanceId)
+    // {
+    //     // ログインユーザーの勤怠情報を取得
+    //     $attendance = Attendance::where('user_id', Auth::id())->findOrFail($attendanceId);
 
-        // 休憩時間の情報をリレーションで取得
-        $breakTimes = $attendance->breakTimes;
+    //     // 休憩時間の情報をリレーションで取得
+    //     $breakTimes = $attendance->breakTimes;
 
-        // 日付を「YYYY年」と「n月j日」に分けてフォーマット
-        $date = Carbon::parse($attendance->date);
-        $attendance->formatted_year     = $date->format('Y') . '年';
-        $attendance->formatted_monthday = $date->format('n') . '月' . $date->format('j') . '日';
+    //     // 日付を「YYYY年」と「n月j日」に分けてフォーマット
+    //     $date = Carbon::parse($attendance->date);
+    //     $attendance->formatted_year     = $date->format('Y') . '年';
+    //     $attendance->formatted_monthday = $date->format('n') . '月' . $date->format('j') . '日';
 
-        // 勤怠詳細画面を表示
-        return view('attendance.details', [
-            'attendance' => $attendance,
-            'breakTimes' => $breakTimes,
-        ]);
-    }
+    //     // 勤怠詳細画面を表示
+    //     return view('attendance.details', [
+    //         'attendance' => $attendance,
+    //         'breakTimes' => $breakTimes,
+    //         'isAdmin' => false, // 一般ユーザーフラグ
+    //     ]);
+    // }
 
     // 勤怠内容の修正を申請
     public function updateDetail(AttendanceDetailRequest $request, $attendanceId)

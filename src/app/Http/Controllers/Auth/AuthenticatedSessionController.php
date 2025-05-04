@@ -22,26 +22,28 @@ class AuthenticatedSessionController extends Controller
         return view('auth.admin-login');
     }
 
-    // ログイン処理
+    // ログイン処理（一般ユーザーまたは管理者）
     public function store(Request $request)
     {
-        // ガード判定
+        // アクセスしてきたURLパターンにより guard を判定
         $guard = $request->is('admin/*') ? 'admin' : 'web';
 
-        // リクエストに応じたバリデーション済みデータの取得
+        // 適切なフォームリクエストを使ってバリデーション
         $formRequest = $guard === 'admin' ? new AdminLoginRequest() : new LoginRequest();
         $validated = $request->validate($formRequest->rules(), $formRequest->messages());
 
-        // 認証試行
+        // 認証情報から remember トークンを除外
         $credentials = $validated;
-        unset($credentials['remember']); // 不要なフィールドを削除
+        unset($credentials['remember']);
 
+        // 認証試行
         if (Auth::guard($guard)->attempt($credentials, $request->filled('remember'))) {
-            // セッションを再生成
             $request->session()->regenerate();
 
-            // 意図したリダイレクト先に移動
-            $redirectTo = $guard === 'admin' ? route('admin.attendance.list') : route('attendance.index');
+            $redirectTo = $guard === 'admin'
+                ? route('admin.attendance.list')
+                : route('attendance.index');
+
             return redirect()->intended($redirectTo);
         }
 
@@ -50,14 +52,13 @@ class AuthenticatedSessionController extends Controller
         ]);
     }
 
-    // ログアウト処理
+    // ログアウト処理（一般ユーザーまたは管理者）
     public function destroy(Request $request)
     {
-        // ガード判定
         $guard = $request->is('admin/*') ? 'admin' : 'web';
 
         Auth::guard($guard)->logout();
-        $request->session()->forget("auth.{$guard}");
+        $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect()->route($guard === 'admin' ? 'admin.login' : 'login');
