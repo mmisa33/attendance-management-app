@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\AttendanceDetailRequest;
 use App\Models\Attendance;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -70,29 +69,5 @@ class AdminAttendanceController extends Controller
             'previousDate' => $date->copy()->subDay(),
             'nextDate' => $date->copy()->addDay(),
         ]);
-    }
-
-    // 管理者用勤怠修正機能（FN038, FN039, FN040）
-    public function updateDetail(AttendanceDetailRequest $request, $attendanceId)
-    {
-        $validated = $request->validated();
-
-        $attendance = Attendance::findOrFail($attendanceId);
-
-        // 出勤・退勤時間を更新
-        $attendance->start_time = $attendance->date . ' ' . $validated['start_time'] . ':00';
-        $attendance->end_time = $attendance->date . ' ' . $validated['end_time'] . ':00';
-        $attendance->note = $validated['note'];
-        $attendance->is_modified = false; // 管理者修正は承認不要
-        $attendance->save();
-
-        // 休憩時間を更新
-        foreach ($attendance->breakTimes as $i => $breakTime) {
-            $breakTime->break_start = $attendance->date . ' ' . ($validated['break_start'][$i] ?? '00:00') . ':00';
-            $breakTime->break_end = $attendance->date . ' ' . ($validated['break_end'][$i] ?? '00:00') . ':00';
-            $breakTime->save();
-        }
-
-        return redirect()->route('admin.attendance.list')->with('success', '勤怠情報を更新しました。');
     }
 }

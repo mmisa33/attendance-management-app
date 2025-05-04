@@ -37,7 +37,7 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/attendance/break-end', [UserAttendanceController::class, 'breakEnd'])->name('attendance.breakEnd');
     Route::post('/attendance/clock-out', [UserAttendanceController::class, 'clockOut'])->name('attendance.clockOut');
     Route::get('/attendance/list', [UserAttendanceController::class, 'attendanceList'])->name('attendance.list');
-    Route::post('/attendance/{attendance}/update', [UserAttendanceController::class, 'updateDetail'])->name('attendance.updateDetail');
+    // Route::post('/attendance/{attendance}/update', [UserAttendanceController::class, 'updateDetail'])->name('attendance.updateDetail');
     Route::get('/stamp_correction_request/list', [AttendanceModificationController::class, 'list'])->name('stamp_correction_request.list');
 });
 
@@ -50,4 +50,5 @@ Route::middleware('auth:admin')->group(function () {
 Route::middleware(['auth.either'])->group(function () {
     // 勤怠詳細ページ
     Route::get('/attendance/{attendance}', [AttendanceDetailController::class, 'show'])->name('attendance.details');
+    Route::post('/attendance/{attendance}/update', [AttendanceDetailController::class, 'updateDetail'])->name('attendance.updateDetail');
 });
