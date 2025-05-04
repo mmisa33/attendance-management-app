@@ -41,11 +41,13 @@
             <tr class="attendance-detail__row">
                 <th class="attendance-detail__header">名前</th>
                 <td class="attendance-detail__content attendance-detail__content--name">
-                    {{-- 管理者はユーザーの情報を表示、一般ユーザーは自分の情報 --}}
+                    {{-- 管理者が他のユーザーの勤怠を見ているので選択されたユーザー名を表示 --}}
                     @if(Auth::guard('admin')->check())
-                        {{ $user->name }}  {{-- 管理者が他のユーザーの勤怠を見ているので選択されたユーザー名を表示 --}}
+                        {{ $user->name }}
+
+                    {{-- 一般ユーザーは自分の名前を表示 --}}
                     @elseif(Auth::guard('web')->check())
-                        {{ $user->name }}  {{-- 一般ユーザーは自分の名前を表示 --}}
+                        {{ $user->name }}
                     @endif
                 </td>
             </tr>
@@ -62,11 +64,12 @@
             {{-- 出勤・退勤 --}}
             <tr class="attendance-detail__row">
                 <th class="attendance-detail__header">出勤・退勤</th>
-                <td class="attendance-detail__content attendance-detail__content--time
-                    @if($attendance->is_modified) modified @endif">
+                <td class="attendance-detail__content attendance-detail__content--time @if($attendance->is_modified) modified @endif">
                     <input type="text" name="start_time" id="start_time" value="{{ old('start_time', substr($attendance->start_time, 11, 5)) }}" pattern="\d{2}:\d{2}" class="content__time" @if($attendance->is_modified) disabled @endif>
                     <span class="content__time-separator">～</span>
                     <input type="text" name="end_time" id="end_time" value="{{ old('end_time', substr($attendance->end_time, 11, 5)) }}" pattern="\d{2}:\d{2}" class="content__time" @if($attendance->is_modified) disabled @endif>
+
+                    {{-- エラーメッセージ --}}
                     @error('start_time')
                         <div class="error-message">{{ $message }}</div>
                     @enderror
@@ -87,25 +90,16 @@
                             休憩{{ $breakRow['index'] + 1 }}
                         @endif
                     </th>
-                    <td class="attendance-detail__content attendance-detail__content--time
-                        @if($attendance->is_modified) modified @endif">
-
-                        <input type="text" name="break_start[{{ $breakRow['index'] }}]"
-                            value="{{ $breakRow['start'] }}"
-                            pattern="\d{2}:\d{2}"
-                            class="content__time"
-                            @if($attendance->is_modified) disabled @endif>
+                    <td class="attendance-detail__content attendance-detail__content--time @if($attendance->is_modified) modified @endif">
+                        <input type="text" name="break_start[{{ $breakRow['index'] }}]" value="{{ $breakRow['start'] }}" pattern="\d{2}:\d{2}" class="content__time" @if($attendance->is_modified) disabled @endif>
 
                         @if (!$attendance->is_modified || $breakRow['start'])
                             <span class="content__time-separator">～</span>
                         @endif
 
-                        <input type="text" name="break_end[{{ $breakRow['index'] }}]"
-                            value="{{ $breakRow['end'] }}"
-                            pattern="\d{2}:\d{2}"
-                            class="content__time"
-                            @if($attendance->is_modified) disabled @endif>
+                        <input type="text" name="break_end[{{ $breakRow['index'] }}]" value="{{ $breakRow['end'] }}" pattern="\d{2}:\d{2}" class="content__time" @if($attendance->is_modified) disabled @endif>
 
+                        {{-- エラーメッセージ --}}
                         @if ($errors->has("break_start.{$breakRow['index']}"))
                             <div class="error-message">
                                 {{ $errors->first("break_start.{$breakRow['index']}") }}
@@ -126,6 +120,8 @@
                 <td class="attendance-detail__content attendance-detail__content--textarea
                     @if($attendance->is_modified) modified @endif">
                     <textarea class="content__textarea" name="note" id="note" rows="2" @if($attendance->is_modified) disabled @endif>{{ old('note', $attendance->note) }}</textarea>
+
+                    {{-- エラーメッセージ --}}
                     @error('note')
                         <div class="error-message">{{ $message }}</div>
                     @enderror
