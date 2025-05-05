@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/attendance/details.css') }}">
+<link rel="stylesheet" href="{{ asset('css/attendance/show.css') }}">
 @endsection
 
 @section('link')
@@ -34,7 +34,7 @@
     <h2 class="attendance-detail__heading">勤怠詳細</h2>
 
     <form class="attendance-detail__form" method="POST"
-        action="{{ route('attendance.updateDetail', ['id' => $attendance->id]) }}" novalidate>
+        action="{{ route('attendance.update', ['id' => $attendance->id]) }}" novalidate>
         @csrf
 
         <table class="attendance-detail__table">

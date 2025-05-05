@@ -55,7 +55,7 @@
                         <td class="attendance-staff__content">{{ $attendance->total_break_time }}</td>
                         <td class="attendance-staff__content">{{ $attendance->total_hours }}</td>
                         <td class="attendance-staff__content">
-                            <a href="{{ route('attendance.details', ['id' => $attendance->id]) }}" class="content__details">詳細</a>
+                            <a href="{{ route('attendance.show', ['id' => $attendance->id]) }}" class="content__details">詳細</a>
                         </td>
                     </tr>
                 @empty
@@ -67,11 +67,10 @@
         </table>
 
         {{-- CSV出力 --}}
-        {{-- <div class="attendance-staff__csv">
-            <a href="{{ route('admin.attendance.staff.csv', ['id' => $staff->id, 'month' => $currentMonth]) }}" class="csv__button">
-                CSV出力
-            </a>
-        </div> --}}
+        <div class="attendance-staff__csv">
+            <a href="{{ route('admin.attendance.staff.csv', ['id' => $staff->id, 'month' => $currentMonth]) }}" class="csv__button">CSV出力</a>
+        </div>
+
     </div>
 </div>
 @endsection

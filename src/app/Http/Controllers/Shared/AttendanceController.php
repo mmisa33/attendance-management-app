@@ -42,14 +42,14 @@ class AttendanceController extends Controller
             ];
         }
 
-        return view('attendance.details', [
+        return view('attendance.show', [
             'user' => $user,
             'attendance' => $attendance,
             'breakRows' => $breakRows,
         ]);
     }
 
-    public function updateDetail(AttendanceDetailRequest $request, $id)
+    public function update(AttendanceDetailRequest $request, $id)
     {
         // 一般ユーザーか管理者かを判定
         $validated = $request->validated();

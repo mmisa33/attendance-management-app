@@ -51,11 +51,12 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/attendance/list', [AdminAttendanceController::class, 'adminAttendanceList'])->name('admin.attendance.list');
     Route::get('/staff/list', [StaffController::class, 'index'])->name('admin.staff.list');
     Route::get('/attendance/staff/{id}', [AdminAttendanceController::class, 'attendanceList'])->name('admin.attendance.staff');
+    Route::get('/attendance/staff/{id}/csv', [AdminAttendanceController::class, 'exportCsv'])->name('admin.attendance.staff.csv');
 });
 
 // 一般ユーザーと管理者の両方がアクセス可能
 Route::middleware(['auth.either'])->group(function () {
     // 勤怠詳細ページ
-    Route::get('/attendance/{id}', [SharedAttendanceController::class, 'show'])->name('attendance.details');
-    Route::post('/attendance/{id}/update', [SharedAttendanceController::class, 'updateDetail'])->name('attendance.updateDetail');
+    Route::get('/attendance/{id}', [SharedAttendanceController::class, 'show'])->name('attendance.show');
+    Route::post('/attendance/{id}/update', [SharedAttendanceController::class, 'update'])->name('attendance.update');
 });

@@ -53,7 +53,7 @@
                             <td class="stamp-request-list__content">{{ $request->note }}</td>
                             <td class="stamp-request-list__content">{{ $request->formatted_created_at }}</td>
                             <td class="stamp-request-list__content">
-                                <a href="{{ route('attendance.details', ['id' => $request->id]) }}" class="content__details">詳細</a>
+                                <a href="{{ route('attendance.show', ['id' => $request->id]) }}" class="content__details">詳細</a>
                             </td>
                         </tr>
                     @endforeach
@@ -87,7 +87,7 @@
                             <td class="stamp-request-list__content">{{ $request->note }}</td>
                             <td class="stamp-request-list__content">{{ $request->formatted_created_at }}</td>
                             <td class="stamp-request-list__content">
-                                <a href="{{ route('attendance.details', ['id' => $request->id]) }}" class="content__details">詳細</a>
+                                <a href="{{ route('attendance.show', ['id' => $request->id]) }}" class="content__details">詳細</a>
                             </td>
                         </tr>
                     @endforeach

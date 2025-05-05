@@ -56,7 +56,7 @@
                     <td class="admin-attendance-list__content">{{ $attendance->total_break_time ?? '' }}</td>
                     <td class="admin-attendance-list__content">{{ $attendance->total_hours ?? '' }}</td>
                     <td class="admin-attendance-list__content">
-                        <a href="{{ route('attendance.details', ['id' => $attendance->id]) }}" class="content__details">詳細</a>
+                        <a href="{{ route('attendance.show', ['id' => $attendance->id]) }}" class="content__details">詳細</a>
                     </td>
                 </tr>
             @endforeach
