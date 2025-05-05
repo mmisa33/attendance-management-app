@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -90,6 +91,7 @@ class UserAttendanceController extends Controller
         if (Auth::guard('admin')->check()) {
             // 管理者はスタッフIDが必要
             $userId = $id;
+            $staff = User::findOrFail($userId);
         } elseif (Auth::guard('web')->check()) {
             // 一般ユーザーは自分自身のID
             $userId = Auth::id();
@@ -105,7 +107,7 @@ class UserAttendanceController extends Controller
         $endOfMonth = Carbon::parse($currentMonth)->endOfMonth();
 
         // 勤怠情報をデータベースから取得
-        $attendances = Attendance::where('user_id', Auth::id())
+        $attendances = Attendance::where('user_id', $userId)
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->orderBy('date', 'asc')
             ->get();
@@ -154,6 +156,12 @@ class UserAttendanceController extends Controller
 
         $view = Auth::guard('admin')->check() ? 'admin.attendance.staff' : 'attendance.list';
 
-        return view($view, compact('attendances', 'currentMonth', 'previousMonth', 'nextMonth', 'formattedMonth'));
+        $params = compact('attendances', 'currentMonth', 'previousMonth', 'nextMonth', 'formattedMonth');
+
+        if (Auth::guard('admin')->check()) {
+            $params['staff'] = $staff;
+        }
+
+        return view($view, $params);
     }
 }

@@ -1,0 +1,98 @@
+body {
+    background-color: #F0EFF2;
+}
+
+.attendance-staff {
+    text-align: center;
+    width: 70vw;
+    margin: 0 auto;
+    padding: 80px 60px;
+}
+
+/* ページタイトル */
+.attendance-staff__heading {
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    height: 40px;
+    border-left: 8px solid;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+/* ナビ */
+.attendance-staff__nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 0;
+    padding: 20px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+}
+
+.nav__button {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #737373;
+}
+
+.nav__month {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.nav__month img {
+    margin-right: 10px;
+    height: 25px;
+    width: 25px;
+}
+
+.nav__button img {
+    height: 15px;
+    width: 20px;
+    margin: 0 10px;
+    opacity: 30%;
+}
+
+/* 勤怠情報一覧テーブル */
+.attendance-staff__table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #737373;
+    table-layout: fixed;
+}
+
+.attendance-staff__header {
+    padding: 10px 20px;
+    border-bottom: 3px solid #E1E1E1;
+}
+
+.attendance-staff__content {
+    padding: 10px 20px;
+    border-bottom: 2px solid #E1E1E1;
+}
+
+.attendance-staff__table tr:last-child td {
+    border-bottom: none;
+}
+
+.content__details {
+    color: #000000;
+}
+
+/* レスポンシブデザイン (タブレット768px - 850px) */
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .attendance-staff {
+        width: 90vw;
+    }
+}
