@@ -80,8 +80,7 @@ class AttendanceDetailController extends Controller
         $attendance->note = $validated['note'];
         $attendance->save();
 
-        // 休憩時間の更新
-        // 既存のbreakTimeを更新
+        // 既存の休憩時間を更新
         foreach ($attendance->breakTimes as $i => $breakTime) {
             $startInput = $validated['break_start'][$i] ?? null;
             $endInput = $validated['break_end'][$i] ?? null;

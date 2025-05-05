@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\UserAttendanceController;
 use App\Http\Controllers\AdminAttendanceController;
+use App\Http\Controllers\AdminStaffController;
 use App\Http\Controllers\AttendanceModificationController;
 use App\Http\Controllers\Shared\AttendanceDetailController;
 use Illuminate\Support\Facades\Route;
@@ -44,6 +45,8 @@ Route::middleware('auth:web')->group(function () {
 Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'adminAttendanceList'])->name('admin.attendance.list');
 });
+    Route::get('/admin/staff/list', [AdminStaffController::class, 'index'])->name('admin.staff.list');
+    Route::get('/admin/attendance/staff/{id}', [UserAttendanceController::class, 'attendanceList'])->name('admin.attendance.staff');
 
 // 一般ユーザーと管理者の両方がアクセス可能
 Route::middleware(['auth.either'])->group(function () {

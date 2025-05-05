@@ -1,0 +1,60 @@
+body {
+    background-color: #F0EFF2;
+}
+
+.staff-list {
+    text-align: center;
+    width: 70vw;
+    margin: 0 auto;
+    padding: 120px 60px;
+}
+
+/* ページタイトル */
+.staff-list__heading {
+    display: flex;
+    align-items: center;
+    margin-bottom: 120px;
+    padding-left: 20px;
+    height: 40px;
+    border-left: 8px solid;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+/* スタッフ一覧テーブル */
+.staff-list__table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #737373;
+    table-layout: fixed;
+}
+
+.staff-list__header {
+    padding: 10px 20px;
+    border-bottom: 3px solid #E1E1E1;
+}
+
+.staff-list__content {
+    padding: 10px 20px;
+    border-bottom: 2px solid #E1E1E1;
+}
+
+.staff-list__table tr:last-child td {
+    border-bottom: none;
+}
+
+.content__details {
+    color: #000000;
+}
+
+/* レスポンシブデザイン (タブレット768px - 850px) */
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .staff-list {
+        width: 90vw;
+    }
+}

@@ -84,10 +84,17 @@ class UserAttendanceController extends Controller
     }
 
     // 勤怠一覧ページを表示
-    public function attendanceList(Request $request)
+    public function attendanceList(Request $request, $id = null)
     {
-        if (!Auth::guard('web')->check()) {
-            return redirect()->route('login');
+        // 管理者かユーザーのいずれかで認証されているかチェック
+        if (Auth::guard('admin')->check()) {
+            // 管理者はスタッフIDが必要
+            $userId = $id;
+        } elseif (Auth::guard('web')->check()) {
+            // 一般ユーザーは自分自身のID
+            $userId = Auth::id();
+        } else {
+            abort(403);
         }
 
         // 現在の月を取得
@@ -145,6 +152,8 @@ class UserAttendanceController extends Controller
         $previousMonth = Carbon::parse($currentMonth)->subMonth()->format('Y-m');
         $nextMonth = Carbon::parse($currentMonth)->addMonth()->format('Y-m');
 
-        return view('attendance.list', compact('attendances', 'currentMonth', 'previousMonth', 'nextMonth', 'formattedMonth'));
+        $view = Auth::guard('admin')->check() ? 'admin.attendance.staff' : 'attendance.list';
+
+        return view($view, compact('attendances', 'currentMonth', 'previousMonth', 'nextMonth', 'formattedMonth'));
     }
 }
