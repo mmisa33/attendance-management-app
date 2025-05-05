@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\UserAuthenticatedSessionController;
+use App\Http\Controllers\Auth\AdminAuthenticatedSessionController;
 
 use App\Http\Controllers\User\AttendanceController  as UserAttendanceController;
 use App\Http\Controllers\User\StampCorrectionRequestController;
@@ -14,23 +15,23 @@ use Illuminate\Support\Facades\Route;
 
 // 一般ユーザー用ログイン
 Route::middleware('guest:web')->group(function () {
-    Route::get('/login', [AuthenticatedSessionController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.submit');
+    Route::get('/login', [UserAuthenticatedSessionController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [UserAuthenticatedSessionController::class, 'store'])->name('login.submit');
 });
 
 // 一般ユーザー用ログアウト
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+Route::post('/logout', [UserAuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth:web')
     ->name('logout');
 
 // 管理者用ログイン
 Route::prefix('admin')->middleware('guest:admin')->group(function () {
-    Route::get('/login', [AuthenticatedSessionController::class, 'showAdminLoginForm'])->name('admin.login');
-    Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('admin.login.submit');
+    Route::get('/login', [AdminAuthenticatedSessionController::class, 'showAdminLoginForm'])->name('admin.login');
+    Route::post('/login', [AdminAuthenticatedSessionController::class, 'store'])->name('admin.login.submit');
 });
 
 // 管理者用ログアウト
-Route::post('/admin/logout', [AuthenticatedSessionController::class, 'destroy'])
+Route::post('/admin/logout', [AdminAuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth:admin')
     ->name('admin.logout');
 
