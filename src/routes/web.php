@@ -4,12 +4,12 @@ use App\Http\Controllers\Auth\UserAuthenticatedSessionController;
 use App\Http\Controllers\Auth\AdminAuthenticatedSessionController;
 
 use App\Http\Controllers\User\AttendanceController  as UserAttendanceController;
-use App\Http\Controllers\User\StampCorrectionRequestController;
 
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\Admin\StaffController;
 
 use App\Http\Controllers\Shared\AttendanceController as SharedAttendanceController;
+use App\Http\Controllers\Shared\StampCorrectionRequestController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -43,7 +43,7 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/attendance/break-end', [UserAttendanceController::class, 'breakEnd'])->name('attendance.breakEnd');
     Route::post('/attendance/clock-out', [UserAttendanceController::class, 'clockOut'])->name('attendance.clockOut');
     Route::get('/attendance/list', [UserAttendanceController::class, 'attendanceList'])->name('attendance.list');
-    Route::get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'list'])->name('stamp_correction_request.list');
+    // Route::get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'list'])->name('stamp_correction_request.list');
 });
 
 // 管理者専用ページ
@@ -59,4 +59,6 @@ Route::middleware(['auth.either'])->group(function () {
     // 勤怠詳細ページ
     Route::get('/attendance/{id}', [SharedAttendanceController::class, 'show'])->name('attendance.show');
     Route::post('/attendance/{id}/update', [SharedAttendanceController::class, 'update'])->name('attendance.update');
+    Route::get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'list'])->name('stamp_correction_request.list');
+
 });
