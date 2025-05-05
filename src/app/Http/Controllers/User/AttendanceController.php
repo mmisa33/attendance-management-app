@@ -4,7 +4,6 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -86,20 +85,16 @@ class AttendanceController extends Controller
     }
 
     // 勤怠一覧ページを表示
-    public function attendanceList(Request $request, $id = null)
+    public function attendanceList(Request $request)
     {
-        // 管理者かユーザーのいずれかで認証されているかチェック
-        if (Auth::guard('admin')->check()) {
-            // 管理者はスタッフIDが必要
-            $userId = $id;
-            $staff = User::findOrFail($userId);
-        } elseif (Auth::guard('web')->check()) {
-            // 一般ユーザーは自分自身のID
-            $userId = Auth::id();
-        } else {
-            abort(403);
-        }
+        $userId = Auth::id(); // 一般ユーザーは自分自身のID
 
+        return $this->getAttendanceList($request, $userId, 'attendance.list');
+    }
+
+    // 労働時間や休憩時間をフォーマットする共通処理
+    private function getAttendanceList(Request $request, $userId, $view)
+    {
         // 現在の月を取得
         $currentMonth = $request->input('month', Carbon::now()->format('Y-m'));
 
@@ -114,17 +109,16 @@ class AttendanceController extends Controller
             ->get();
 
         foreach ($attendances as $attendance) {
-            // 勤怠の日付をフォーマット
             $date = Carbon::parse($attendance->date);
 
-            // 出勤時刻、退勤時刻をフォーマット
+            // 勤怠の日付をフォーマット
             $attendance->formatted_date = $date->locale('ja')->format('m/d') . '(' . $date->isoFormat('ddd') . ')';
             $attendance->start_time_formatted = $attendance->start_time
                 ? Carbon::parse($attendance->start_time)->format('H:i')
-                : ''; // 出勤時刻があれば時間フォーマット、なければ空文字
+                : '';
             $attendance->end_time_formatted = $attendance->end_time
                 ? Carbon::parse($attendance->end_time)->format('H:i')
-                : ''; // 退勤時刻があれば時間フォーマット、なければ空文字
+                : '';
 
             // 休憩時間合計（分単位）
             $totalBreakMinutes = $attendance->breakTimes && $attendance->breakTimes->isNotEmpty()
@@ -155,14 +149,7 @@ class AttendanceController extends Controller
         $previousMonth = Carbon::parse($currentMonth)->subMonth()->format('Y-m');
         $nextMonth = Carbon::parse($currentMonth)->addMonth()->format('Y-m');
 
-        $view = Auth::guard('admin')->check() ? 'admin.attendance.staff' : 'attendance.list';
-
-        $params = compact('attendances', 'currentMonth', 'previousMonth', 'nextMonth', 'formattedMonth');
-
-        if (Auth::guard('admin')->check()) {
-            $params['staff'] = $staff;
-        }
-
-        return view($view, $params);
+        // ビューを返す
+        return view($view, compact('attendances', 'currentMonth', 'previousMonth', 'nextMonth', 'formattedMonth'));
     }
 }

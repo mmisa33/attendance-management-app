@@ -49,7 +49,7 @@ Route::middleware('auth:web')->group(function () {
 Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/attendance/list', [AdminAttendanceController::class, 'adminAttendanceList'])->name('admin.attendance.list');
     Route::get('/staff/list', [StaffController::class, 'index'])->name('admin.staff.list');
-    Route::get('/attendance/staff/{id}', [UserAttendanceController::class, 'attendanceList'])->name('admin.attendance.staff');
+    Route::get('/attendance/staff/{id}', [AdminAttendanceController::class, 'attendanceList'])->name('admin.attendance.staff');
 });
 
 // 一般ユーザーと管理者の両方がアクセス可能
