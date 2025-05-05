@@ -53,7 +53,7 @@
                             <td class="modification-list__content">{{ $modification->note }}</td>
                             <td class="modification-list__content">{{ $modification->formatted_created_at }}</td>
                             <td class="modification-list__content">
-                                <a href="{{ route('attendance.details', ['attendance' => $modification->id]) }}" class="content__details">詳細</a>
+                                <a href="{{ route('attendance.details', ['id' => $modification->id]) }}" class="content__details">詳細</a>
                             </td>
                         </tr>
                     @endforeach
@@ -87,7 +87,7 @@
                             <td class="modification-list__content">{{ $modification->note }}</td>
                             <td class="modification-list__content">{{ $modification->formatted_created_at }}</td>
                             <td class="modification-list__content">
-                                <a href="{{ route('attendance.details', ['attendance' => $modification->id]) }}" class="content__details">詳細</a>
+                                <a href="{{ route('attendance.details', ['id' => $modification->id]) }}" class="content__details">詳細</a>
                             </td>
                         </tr>
                     @endforeach

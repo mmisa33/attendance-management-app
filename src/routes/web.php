@@ -9,7 +9,7 @@ use App\Http\Controllers\User\StampCorrectionRequestController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\Admin\StaffController;
 
-use App\Http\Controllers\Shared\AttendanceDetailController;
+use App\Http\Controllers\Shared\AttendanceController as SharedAttendanceController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -56,6 +56,6 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
 // 一般ユーザーと管理者の両方がアクセス可能
 Route::middleware(['auth.either'])->group(function () {
     // 勤怠詳細ページ
-    Route::get('/attendance/{attendance}', [AttendanceDetailController::class, 'show'])->name('attendance.details');
-    Route::post('/attendance/{attendance}/update', [AttendanceDetailController::class, 'updateDetail'])->name('attendance.updateDetail');
+    Route::get('/attendance/{id}', [SharedAttendanceController::class, 'show'])->name('attendance.details');
+    Route::post('/attendance/{id}/update', [SharedAttendanceController::class, 'updateDetail'])->name('attendance.updateDetail');
 });

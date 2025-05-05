@@ -8,17 +8,17 @@ use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-class AttendanceDetailController extends Controller
+class AttendanceController extends Controller
 {
-    public function show($attendanceId)
+    public function show($id)
     {
         // 管理者または一般ユーザーがログインしている場合
         if (Auth::guard('admin')->check()) {
-            $attendance = Attendance::findOrFail($attendanceId);
+            $attendance = Attendance::findOrFail($id);
             $user = $attendance->user;  // 勤怠に紐づくユーザー情報を取得
         } elseif (Auth::guard('web')->check()) {
             $user = Auth::guard('web')->user();
-            $attendance = Attendance::where('user_id', $user->id)->findOrFail($attendanceId);
+            $attendance = Attendance::where('user_id', $user->id)->findOrFail($id);
         } else {
             abort(403);
         }
@@ -49,14 +49,14 @@ class AttendanceDetailController extends Controller
         ]);
     }
 
-    public function updateDetail(AttendanceDetailRequest $request, $attendanceId)
+    public function updateDetail(AttendanceDetailRequest $request, $id)
     {
         // 一般ユーザーか管理者かを判定
         $validated = $request->validated();
 
         // 一般ユーザーの場合
         if (Auth::guard('web')->check()) {
-            $attendance = Attendance::where('user_id', Auth::id())->findOrFail($attendanceId);
+            $attendance = Attendance::where('user_id', Auth::id())->findOrFail($id);
 
             // 修正申請状態に変更
             $attendance->is_modified = true; // 修正申請中
@@ -64,7 +64,7 @@ class AttendanceDetailController extends Controller
         }
         // 管理者の場合
         elseif (Auth::guard('admin')->check()) {
-            $attendance = Attendance::findOrFail($attendanceId);
+            $attendance = Attendance::findOrFail($id);
 
             // 直接修正
             $attendance->is_modified = false; // 直接修正されたので修正申請状態を解除
