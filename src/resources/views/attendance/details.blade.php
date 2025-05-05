@@ -10,7 +10,7 @@
     {{-- 管理者用 --}}
     @if(auth()->guard('admin')->check())
         <a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a>
-        <a class="header__link" href="">スタッフ一覧</a>
+        <a class="header__link" href="{{ route('admin.staff.list') }}">スタッフ一覧</a>
         <a class="header__link" href="">申請一覧</a>
         <form action="{{ route('admin.logout') }}" method="POST">
             @csrf
