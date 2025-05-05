@@ -2,7 +2,7 @@ body {
     background-color: #F0EFF2;
 }
 
-.modification-list {
+.stamp-request-list {
     text-align: center;
     width: 70vw;
     margin: 0 auto;
@@ -10,7 +10,7 @@ body {
 }
 
 /* ページタイトル */
-.modification-list__heading {
+.stamp-request-list__heading {
     display: flex;
     align-items: center;
     margin-bottom: 90px;
@@ -22,7 +22,7 @@ body {
 }
 
 /* タブ */
-.modification-list__tab {
+.stamp-request-list__tab {
     display: flex;
     margin-bottom: 50px;
     border-bottom: 1px solid #000000;
@@ -38,7 +38,7 @@ body {
 }
 
 /* 承認テーブル */
-.modification-list__table {
+.stamp-request-list__table {
     width: 100%;
     border-collapse: collapse;
     background-color: #FFFFFF;
@@ -50,17 +50,17 @@ body {
     table-layout: fixed;
 }
 
-.modification-list__header {
+.stamp-request-list__header {
     padding: 10px 20px;
     border-bottom: 3px solid #E1E1E1;
 }
 
-.modification-list__content {
+.stamp-request-list__content {
     padding: 10px 20px;
     border-bottom: 2px solid #E1E1E1;
 }
 
-.modification-list__table tr:last-child td {
+.stamp-request-list__table tr:last-child td {
     border-bottom: none;
 }
 
@@ -70,11 +70,11 @@ body {
 
 /* レスポンシブデザイン (タブレット768px - 850px) */
 @media screen and (min-width: 768px) and (max-width: 850px) {
-    .modification-list {
+    .stamp-request-list {
         width: 90vw;
     }
 
-    .modification-list__tab {
+    .stamp-request-list__tab {
         justify-content: center;
     }
 }
