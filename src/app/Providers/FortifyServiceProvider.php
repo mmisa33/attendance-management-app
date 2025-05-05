@@ -28,7 +28,7 @@ class FortifyServiceProvider extends ServiceProvider
 
         Fortify::loginView(function (Request $request) {
             return $request->is('admin/*')
-                ? view('auth.admin-login')
+                ? view('admin.auth.login')
                 : view('auth.login');
         });
 

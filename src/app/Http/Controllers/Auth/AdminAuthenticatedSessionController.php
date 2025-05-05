@@ -12,7 +12,7 @@ class AdminAuthenticatedSessionController extends Controller
     // 管理者用ログインページ表示
     public function showAdminLoginForm()
     {
-        return view('auth.admin-login');
+        return view('admin.auth.login');
     }
 
     // ログイン処理（管理者）
