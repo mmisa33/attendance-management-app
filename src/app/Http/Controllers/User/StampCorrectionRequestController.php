@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
 
-class AttendanceModificationController extends Controller
+class StampCorrectionRequestController extends Controller
 {
     // 承認待ち申請一覧ページを表示
     public function list()

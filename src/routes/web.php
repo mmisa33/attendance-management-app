@@ -1,11 +1,15 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\UserAttendanceController;
-use App\Http\Controllers\AdminAttendanceController;
-use App\Http\Controllers\AdminStaffController;
-use App\Http\Controllers\AttendanceModificationController;
+
+use App\Http\Controllers\User\AttendanceController  as UserAttendanceController;
+use App\Http\Controllers\User\StampCorrectionRequestController;
+
+use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\Admin\StaffController;
+
 use App\Http\Controllers\Shared\AttendanceDetailController;
+
 use Illuminate\Support\Facades\Route;
 
 // 一般ユーザー用ログイン
@@ -38,15 +42,15 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/attendance/break-end', [UserAttendanceController::class, 'breakEnd'])->name('attendance.breakEnd');
     Route::post('/attendance/clock-out', [UserAttendanceController::class, 'clockOut'])->name('attendance.clockOut');
     Route::get('/attendance/list', [UserAttendanceController::class, 'attendanceList'])->name('attendance.list');
-    Route::get('/stamp_correction_request/list', [AttendanceModificationController::class, 'list'])->name('stamp_correction_request.list');
+    Route::get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'list'])->name('stamp_correction_request.list');
 });
 
 // 管理者専用ページ
-Route::middleware('auth:admin')->group(function () {
-    Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'adminAttendanceList'])->name('admin.attendance.list');
+Route::prefix('admin')->middleware('auth:admin')->group(function () {
+    Route::get('/attendance/list', [AdminAttendanceController::class, 'adminAttendanceList'])->name('admin.attendance.list');
+    Route::get('/staff/list', [StaffController::class, 'index'])->name('admin.staff.list');
+    Route::get('/attendance/staff/{id}', [UserAttendanceController::class, 'attendanceList'])->name('admin.attendance.staff');
 });
-    Route::get('/admin/staff/list', [AdminStaffController::class, 'index'])->name('admin.staff.list');
-    Route::get('/admin/attendance/staff/{id}', [UserAttendanceController::class, 'attendanceList'])->name('admin.attendance.staff');
 
 // 一般ユーザーと管理者の両方がアクセス可能
 Route::middleware(['auth.either'])->group(function () {

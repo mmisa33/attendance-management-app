@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\Attendance;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
-class AdminAttendanceController extends Controller
+class AttendanceController extends Controller
 {
     // 管理者用勤怠一覧ページを表示
     public function adminAttendanceList(Request $request)
