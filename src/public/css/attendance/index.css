@@ -57,17 +57,17 @@
     background-color: white;
 }
 
-.attendance__button {
+.attendance__btn {
     color: white;
     font-weight: bold;
     font-size: 32px;
 }
 
-.attendance__button--break {
+.attendance__btn--break {
     color: black;
 }
 
-.attendance__button:not(.attendance__button--break) {
+.attendance__btn:not(.attendance__btn--break) {
     color: white;
 }
 

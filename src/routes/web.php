@@ -25,8 +25,6 @@ Route::post('/logout', [UserAuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth:web')
     ->name('logout');
 
-
-
 // 管理者用ログイン
 Route::prefix('admin')->middleware('guest:admin')->group(function () {
     Route::get('/login', [AdminAuthenticatedSessionController::class, 'showAdminLoginForm'])->name('admin.login');

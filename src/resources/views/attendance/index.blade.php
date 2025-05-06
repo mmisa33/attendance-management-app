@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/attendance/index.css')}}">
+<link rel="stylesheet" href="{{ asset('css/attendance/index.css') }}">
 @endsection
 
 @section('link')
@@ -38,41 +38,41 @@
     {{-- 出勤・退勤・休憩ボタン --}}
     <div class="attendance__actions">
 
+        @if($attendance->status === $attendanceStatuses['off'])
         {{-- 出勤ボタン --}}
-        @if($attendance->status === '勤務外')
             <form class="attendance__form" method="POST" action="{{ route('attendance.clockIn') }}">
                 @csrf
-                <button class="attendance__button" type="submit">出勤</button>
+                <button class="attendance__btn" type="submit">出勤</button>
             </form>
 
+        @elseif($attendance->status === $attendanceStatuses['working'])
         {{-- 退勤ボタン --}}
-        @elseif($attendance->status === '出勤中')
             <form class="attendance__form" method="POST" action="{{ route('attendance.clockOut') }}">
                 @csrf
-                <button class="attendance__button" type="submit">退勤</button>
+                <button class="attendance__btn" type="submit">退勤</button>
             </form>
 
             {{-- 休憩開始ボタン --}}
             <form class="attendance__form attendance__form--break" method="POST" action="{{ route('attendance.breakStart') }}">
                 @csrf
-                <button class="attendance__button attendance__button--break" type="submit">休憩入</button>
+                <button class="attendance__btn attendance__btn--break" type="submit">休憩入</button>
             </form>
 
-        {{-- 休憩終了ボタン --}}
-        @elseif($attendance->status === '休憩中')
+        @elseif($attendance->status === $attendanceStatuses['break'])
+            {{-- 休憩終了ボタン --}}
             <form class="attendance__form attendance__form--break" method="POST" action="{{ route('attendance.breakEnd') }}">
                 @csrf
-                <button class="attendance__button attendance__button--break" type="submit">休憩戻</button>
+                <button class="attendance__btn attendance__btn--break" type="submit">休憩戻</button>
             </form>
-        @elseif($attendance->status === '退勤済')
-            <p class="attendance__message">お疲れ様でした。</p>
-        @endif
 
+            @elseif($attendance->status === $attendanceStatuses['done'])
+                <p class="attendance__message">お疲れ様でした。</p>
+            @endif
     </div>
 </div>
 
 <script>
-    // 時間を自動で更新
+    // 時間を分単位で自動更新
     function updateTime() {
         const timeElement = document.getElementById('current-time');
         const now = new Date();
@@ -81,6 +81,7 @@
         timeElement.textContent = `${hours}:${minutes}`;
     }
 
-    setInterval(updateTime, 1000); // 1秒ごとに更新
+    const UPDATE_INTERVAL_MS = 60000;
+    setInterval(updateTime, UPDATE_INTERVAL_MS);
 </script>
 @endsection

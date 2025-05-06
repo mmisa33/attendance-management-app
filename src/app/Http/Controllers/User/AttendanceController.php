@@ -10,24 +10,26 @@ use Illuminate\Support\Facades\Auth;
 
 class AttendanceController extends Controller
 {
-    // ステータス定数定義
-    private const STATUS_OFF = '勤務外';
-    private const STATUS_WORKING = '出勤中';
-    private const STATUS_BREAK = '休憩中';
-    private const STATUS_DONE = '退勤済';
-
     // 勤怠登録ページを表示
     public function index()
     {
         $today = Carbon::today();
         $attendance = Attendance::firstOrCreate(
             ['user_id' => Auth::id(), 'date' => $today],
-            ['status' => self::STATUS_OFF]
+            ['status' => Attendance::STATUS_OFF]  // 定数を使用
         );
+
+        // 定数をビューに渡す
+        $attendanceStatuses = [
+            'off' => Attendance::STATUS_OFF,
+            'working' => Attendance::STATUS_WORKING,
+            'break' => Attendance::STATUS_BREAK,
+            'done' => Attendance::STATUS_DONE,
+        ];
 
         $now = Carbon::now();
 
-        return view('attendance.index', compact('attendance', 'now'));
+        return view('attendance.index', compact('attendance', 'now', 'attendanceStatuses'));
     }
 
     // 出勤時にステータスを「出勤中」に変更
@@ -35,9 +37,9 @@ class AttendanceController extends Controller
     {
         $attendance = $this->getTodayAttendance();
 
-        if ($attendance->status === self::STATUS_OFF) {
+        if ($attendance->status === Attendance::STATUS_OFF) {
             $attendance->update([
-                'status' => self::STATUS_WORKING,
+                'status' => Attendance::STATUS_WORKING,
                 'start_time' => Carbon::now(),
             ]);
         }
@@ -50,8 +52,8 @@ class AttendanceController extends Controller
     {
         $attendance = $this->getTodayAttendance();
 
-        if ($attendance->status === self::STATUS_WORKING) {
-            $attendance->update(['status' => self::STATUS_BREAK]);
+        if ($attendance->status === Attendance::STATUS_WORKING) {
+            $attendance->update(['status' => Attendance::STATUS_BREAK]);
             $attendance->breakTimes()->create(['break_start' => Carbon::now()]);
         }
 
@@ -63,8 +65,8 @@ class AttendanceController extends Controller
     {
         $attendance = $this->getTodayAttendance();
 
-        if ($attendance->status === self::STATUS_BREAK) {
-            $attendance->update(['status' => self::STATUS_WORKING]);
+        if ($attendance->status === Attendance::STATUS_BREAK) {
+            $attendance->update(['status' => Attendance::STATUS_WORKING]);
 
             $lastBreak = $attendance->breakTimes()->whereNull('break_end')->latest()->first();
             if ($lastBreak) {
@@ -80,9 +82,9 @@ class AttendanceController extends Controller
     {
         $attendance = $this->getTodayAttendance();
 
-        if ($attendance->status === self::STATUS_WORKING) {
+        if ($attendance->status === Attendance::STATUS_WORKING) {
             $attendance->update([
-                'status' => self::STATUS_DONE,
+                'status' => Attendance::STATUS_DONE,
                 'end_time' => Carbon::now(),
             ]);
         }
