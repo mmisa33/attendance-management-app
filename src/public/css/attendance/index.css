@@ -38,37 +38,24 @@
     gap: 80px;
 }
 
-.attendance__form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.attendance__btn {
     width: 211px;
     height: 77px;
     background-color: black;
-    border-radius: 20px;
-
-}
-
-.attendance__form:not(.attendance__form--break) {
-    background-color: black;
-}
-
-.attendance__form--break {
-    background-color: white;
-}
-
-.attendance__btn {
     color: white;
     font-weight: bold;
     font-size: 32px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
 }
 
 .attendance__btn--break {
+    background-color: white;
     color: black;
-}
-
-.attendance__btn:not(.attendance__btn--break) {
-    color: white;
 }
 
 .attendance__message {
