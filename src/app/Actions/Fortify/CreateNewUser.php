@@ -20,9 +20,12 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        // RegisterRequestのバリデーションを使用
-        $request = new RegisterRequest();
-        $validator = Validator::make($input, $request->rules(), $request->messages());
+        // RegisterRequest の静的メソッドを使用
+        $validator = Validator::make(
+            $input,
+            RegisterRequest::rulesStatic(),
+            RegisterRequest::messagesStatic()
+        );
 
         if ($validator->fails()) {
             throw ValidationException::withMessages($validator->errors()->toArray());

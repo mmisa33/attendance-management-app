@@ -14,7 +14,7 @@ use App\Http\Controllers\Shared\StampCorrectionRequestController as SharedStampC
 
 use Illuminate\Support\Facades\Route;
 
-// 一般ユーザー用ログイン
+// 一般ユーザー用ログイン ★Fortifyを使用しているか要確認
 Route::middleware('guest:web')->group(function () {
     Route::get('/login', [UserAuthenticatedSessionController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [UserAuthenticatedSessionController::class, 'store'])->name('login.submit');
@@ -24,6 +24,8 @@ Route::middleware('guest:web')->group(function () {
 Route::post('/logout', [UserAuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth:web')
     ->name('logout');
+
+
 
 // 管理者用ログイン
 Route::prefix('admin')->middleware('guest:admin')->group(function () {

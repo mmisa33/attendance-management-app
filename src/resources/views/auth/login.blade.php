@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="login-form">
-    {{--  ページタイトル  --}}
+    {{-- ページタイトル --}}
     <h2 class="login-form__heading content__heading">ログイン</h2>
 
     {{-- ログインフォーム --}}
@@ -38,9 +38,9 @@
 
             <div class="login-form__actions">
                 {{-- ログインボタン --}}
-                <input class="login-form__btn" type="submit" value="ログイン">
+                <input class="login-form__btn" type="submit" value="ログインする">
 
-                {{--  会員登録ページへ移行  --}}
+                {{-- 会員登録ページへ移行 --}}
                 <a class="login-form__link" href="{{ route('register') }}">会員登録はこちら</a>
             </div>
         </form>

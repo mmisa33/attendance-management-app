@@ -6,15 +6,15 @@
 
 @section('content')
 <div class="register-form">
-    {{--  ページタイトル  --}}
+    {{-- ページタイトル --}}
     <h2 class="register-form__heading content__heading">会員登録</h2>
 
-    {{--  ユーザー登録フォーム  --}}
+    {{-- ユーザー登録フォーム --}}
     <div class="register-form__inner">
         <form class="register-form__form" action="{{ route('register') }}" method="POST" novalidate>
             @csrf
 
-            {{--  名前入力  --}}
+            {{-- 名前入力 --}}
             <div class="register-form__group">
                 <label class="register-form__label" for="name">名前</label>
                 <input class="register-form__input" type="text" name="name" id="name" value="{{ old('name') }}">
@@ -25,7 +25,7 @@
                 </p>
             </div>
 
-            {{--  メールアドレス入力  --}}
+            {{-- メールアドレス入力 --}}
             <div class="register-form__group">
                 <label class="register-form__label" for="email">メールアドレス</label>
                 <input class="register-form__input" type="email" name="email" id="email" value="{{ old('email') }}">
@@ -36,7 +36,7 @@
                 </p>
             </div>
 
-            {{--  パスワード入力  --}}
+            {{-- パスワード入力 --}}
             <div class="register-form__group">
                 <label class="register-form__label" for="password">パスワード</label>
                 <input class="register-form__input" type="password" name="password" id="password">
@@ -49,7 +49,7 @@
                 </p>
             </div>
 
-            {{--  確認用パスワード入力  --}}
+            {{-- 確認用パスワード入力 --}}
             <div class="register-form__group">
                 <label class="register-form__label" for="password_confirmation">パスワード確認</label>
                 <input class="register-form__input" type="password" name="password_confirmation" id="password_confirmation">
@@ -63,10 +63,10 @@
             </div>
 
             <div class="register-form__actions">
-                {{--  登録ボタン  --}}
+                {{-- 登録ボタン --}}
                 <input class="register-form__btn" type="submit" value="登録する">
 
-                {{--  ログインページへ移行  --}}
+                {{-- ログインページへ移行 --}}
                 <a class="register-form__link" href="{{ route('login') }}">ログインはこちら</a>
             </div>
         </form>

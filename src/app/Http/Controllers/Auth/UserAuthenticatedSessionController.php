@@ -9,24 +9,19 @@ use Illuminate\Support\Facades\Auth;
 
 class UserAuthenticatedSessionController extends Controller
 {
-    // 一般ユーザーログインページ表示
+    // ログインページ表示（一般ユーザー）★必要か確認
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    // ログイン処理（一般ユーザー）
-    public function store(Request $request)
+    // ログイン処理（一般ユーザー）★必要か確認
+    public function store(LoginRequest $request)
     {
-        $formRequest = new LoginRequest();
-        $validated = $request->validate($formRequest->rules(), $formRequest->messages());
-
-        $credentials = $validated;
-        unset($credentials['remember']);
+        $credentials = $request->safe()->only('email', 'password');
 
         if (Auth::guard('web')->attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-
             return redirect()->intended(route('attendance.index'));
         }
 
