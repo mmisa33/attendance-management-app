@@ -142,14 +142,19 @@
             </tr>
         </table>
 
-        {{-- 修正申請ボタン --}}
-        @if (!$attendance->is_modified)
+                {{-- 修正申請ボタン --}}
+        @if (!$attendance->is_modified && !$attendance->is_approved)
             <button type="submit" class="attendance-detail__button">修正</button>
         @endif
 
         {{-- 申請中の場合 --}}
-        @if ($attendance->is_modified)
+        @if ($attendance->is_modified && !$attendance->is_approved)
             <div class="alert-message">*承認待ちのため修正はできません。</div>
+        @endif
+
+        {{-- 承認済みの場合 --}}
+        @if ($attendance->is_approved)
+            <p class="attendance-detail__approved-label">承認済み</p>
         @endif
     </form>
 </div>

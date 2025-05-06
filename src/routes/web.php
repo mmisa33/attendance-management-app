@@ -7,9 +7,10 @@ use App\Http\Controllers\User\AttendanceController  as UserAttendanceController;
 
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Admin\StampCorrectionRequestController as AdminStampCorrectionRequestController;
 
 use App\Http\Controllers\Shared\AttendanceController as SharedAttendanceController;
-use App\Http\Controllers\Shared\StampCorrectionRequestController;
+use App\Http\Controllers\Shared\StampCorrectionRequestController as SharedStampCorrectionRequestController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -43,7 +44,6 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/attendance/break-end', [UserAttendanceController::class, 'breakEnd'])->name('attendance.breakEnd');
     Route::post('/attendance/clock-out', [UserAttendanceController::class, 'clockOut'])->name('attendance.clockOut');
     Route::get('/attendance/list', [UserAttendanceController::class, 'attendanceList'])->name('attendance.list');
-    // Route::get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'list'])->name('stamp_correction_request.list');
 });
 
 // 管理者専用ページ
@@ -52,6 +52,8 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/staff/list', [StaffController::class, 'index'])->name('admin.staff.list');
     Route::get('/attendance/staff/{id}', [AdminAttendanceController::class, 'attendanceList'])->name('admin.attendance.staff');
     Route::get('/attendance/staff/{id}/csv', [AdminAttendanceController::class, 'exportCsv'])->name('admin.attendance.staff.csv');
+    Route::get('/stamp_correction_request/approve/{id}', [AdminStampCorrectionRequestController::class, 'show'])->name('admin.stamp_correction_request.show');
+    Route::post('/stamp_correction_request/approve/{id}', [AdminStampCorrectionRequestController::class, 'approve'])->name('admin.stamp_correction_request.approve');
 });
 
 // 一般ユーザーと管理者の両方がアクセス可能
@@ -59,6 +61,6 @@ Route::middleware(['auth.either'])->group(function () {
     // 勤怠詳細ページ
     Route::get('/attendance/{id}', [SharedAttendanceController::class, 'show'])->name('attendance.show');
     Route::post('/attendance/{id}/update', [SharedAttendanceController::class, 'update'])->name('attendance.update');
-    Route::get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'list'])->name('stamp_correction_request.list');
+    Route::get('/stamp_correction_request/list', [SharedStampCorrectionRequestController::class, 'list'])->name('stamp_correction_request.list');
 
 });

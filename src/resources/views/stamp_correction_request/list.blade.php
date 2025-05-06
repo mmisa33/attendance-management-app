@@ -65,7 +65,11 @@
                             <td class="stamp-request-list__content">{{ $request->note }}</td>
                             <td class="stamp-request-list__content">{{ $request->formatted_created_at }}</td>
                             <td class="stamp-request-list__content">
-                                <a href="{{ route('attendance.show', ['id' => $request->id]) }}" class="content__details">詳細</a>
+                                @if(auth()->guard('admin')->check())
+                                    <a href="{{ route('admin.stamp_correction_request.show', ['id' => $request->id]) }}" class="content__details">詳細</a>
+                                @else
+                                    <a href="{{ route('attendance.show', ['id' => $request->id]) }}" class="content__details">詳細</a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
@@ -99,7 +103,11 @@
                             <td class="stamp-request-list__content">{{ $request->note }}</td>
                             <td class="stamp-request-list__content">{{ $request->formatted_created_at }}</td>
                             <td class="stamp-request-list__content">
-                                <a href="{{ route('attendance.show', ['id' => $request->id]) }}" class="content__details">詳細</a>
+                                @if(auth()->guard('admin')->check())
+                                    <a href="{{ route('admin.stamp_correction_request.show', ['id' => $request->id]) }}" class="content__details">詳細</a>
+                                @else
+                                    <a href="{{ route('attendance.show', ['id' => $request->id]) }}" class="content__details">詳細</a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

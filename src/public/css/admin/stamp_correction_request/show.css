@@ -1,0 +1,114 @@
+body {
+    background-color: #F0EFF2;
+}
+
+.approval-detail {
+    text-align: center;
+    width: 70vw;
+    margin: 0 auto;
+    padding: 80px 60px;
+}
+
+/* ページタイトル */
+.approval-detail__heading {
+    display: flex;
+    align-items: center;
+    margin-bottom: 90px;
+    padding-left: 20px;
+    height: 40px;
+    border-left: 8px solid;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+/* 勤怠承認フォーム */
+.approval-detail__form {
+    text-align: right;
+}
+
+.approval-detail__table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    text-align: left;
+    border: 1px solid #E1E1E1;
+}
+
+.approval-detail__header,
+.approval-detail__content {
+    border-bottom: 2px solid #E1E1E1;
+}
+
+.approval-detail__header {
+    width: 38%;
+    padding: 40px 60px;
+    color: #737373;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.approval-detail__content {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.approval-detail__table tr:last-child td,
+.approval-detail__table tr:last-child th {
+    border-bottom: none;
+}
+
+.content__year {
+    display: inline-block;
+    width: 28%;
+}
+
+.content__time-separator {
+    display: inline-block;
+    width: 20%;
+    text-align: center;
+}
+
+/* 承認ボタン */
+.approval-detail__button,
+.approval-detail__approved-label {
+    width: 130px;
+    height: 50px;
+    margin-top: 110px;
+    margin-left: auto;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 22px;
+    color: #FFFFFF;
+}
+
+.approval-detail__button {
+    background-color: #000000;
+}
+
+.approval-detail__approved-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #696969;
+}
+
+/* レスポンシブデザイン (タブレット768px - 850px) */
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .approval-detail {
+        width: 90vw;
+    }
+
+    .approval-detail__form {
+        text-align: center;
+    }
+
+    .content__year {
+        width: 38%;
+    }
+
+    .content__time-separator {
+        width: 25%;
+    }
+}
