@@ -10,13 +10,19 @@ use Illuminate\Support\Facades\Auth;
 
 class AttendanceController extends Controller
 {
+    // ステータス定数定義
+    private const STATUS_OFF = '勤務外';
+    private const STATUS_WORKING = '出勤中';
+    private const STATUS_BREAK = '休憩中';
+    private const STATUS_DONE = '退勤済';
+
     // 勤怠登録ページを表示
     public function index()
     {
         $today = Carbon::today();
         $attendance = Attendance::firstOrCreate(
             ['user_id' => Auth::id(), 'date' => $today],
-            ['status' => '勤務外']
+            ['status' => self::STATUS_OFF]
         );
 
         $now = Carbon::now();
@@ -27,11 +33,11 @@ class AttendanceController extends Controller
     // 出勤時にステータスを「出勤中」に変更
     public function clockIn()
     {
-        $attendance = Attendance::where('user_id', Auth::id())->where('date', Carbon::today())->first();
+        $attendance = $this->getTodayAttendance();
 
-        if ($attendance->status === '勤務外') {
+        if ($attendance->status === self::STATUS_OFF) {
             $attendance->update([
-                'status' => '出勤中',
+                'status' => self::STATUS_WORKING,
                 'start_time' => Carbon::now(),
             ]);
         }
@@ -42,10 +48,10 @@ class AttendanceController extends Controller
     // 休憩開始時にステータスを「休憩中」に変更
     public function breakStart()
     {
-        $attendance = Attendance::where('user_id', Auth::id())->where('date', Carbon::today())->first();
+        $attendance = $this->getTodayAttendance();
 
-        if ($attendance->status === '出勤中') {
-            $attendance->update(['status' => '休憩中']);
+        if ($attendance->status === self::STATUS_WORKING) {
+            $attendance->update(['status' => self::STATUS_BREAK]);
             $attendance->breakTimes()->create(['break_start' => Carbon::now()]);
         }
 
@@ -55,10 +61,10 @@ class AttendanceController extends Controller
     // 休憩終了時にステータスを「出勤中」に変更
     public function breakEnd()
     {
-        $attendance = Attendance::where('user_id', Auth::id())->where('date', Carbon::today())->first();
+        $attendance = $this->getTodayAttendance();
 
-        if ($attendance->status === '休憩中') {
-            $attendance->update(['status' => '出勤中']);
+        if ($attendance->status === self::STATUS_BREAK) {
+            $attendance->update(['status' => self::STATUS_WORKING]);
 
             $lastBreak = $attendance->breakTimes()->whereNull('break_end')->latest()->first();
             if ($lastBreak) {
@@ -72,16 +78,24 @@ class AttendanceController extends Controller
     // 退勤時にステータスを「退勤済」に変更
     public function clockOut()
     {
-        $attendance = Attendance::where('user_id', Auth::id())->where('date', Carbon::today())->first();
+        $attendance = $this->getTodayAttendance();
 
-        if ($attendance->status === '出勤中') {
+        if ($attendance->status === self::STATUS_WORKING) {
             $attendance->update([
-                'status' => '退勤済',
+                'status' => self::STATUS_DONE,
                 'end_time' => Carbon::now(),
             ]);
         }
 
         return redirect()->route('attendance.index');
+    }
+
+    // 今日の勤怠情報を取得
+    private function getTodayAttendance()
+    {
+        return Attendance::where('user_id', Auth::id())
+            ->where('date', Carbon::today())
+            ->first();
     }
 
     // 勤怠一覧ページを表示
