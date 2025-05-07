@@ -24,9 +24,9 @@
 
     {{-- ナビ --}}
     <div class="attendance-list__nav">
-        <a href="{{ route('attendance.list', ['month' => $previousMonth]) }}" class="nav__button"><img src="{{ asset('images/icon/arrow-left.png') }}" alt="前月">前月</a>
+        <a href="{{ route('attendance.list', ['month' => $previousMonth]) }}" class="nav__btn"><img src="{{ asset('images/icon/arrow-left.png') }}" alt="前月に戻る">前月</a>
         <h3 class="nav__month"><img src="{{ asset('images/icon/calender.png') }}" alt="カレンダー">{{ $formattedMonth }}</h3>
-        <a href="{{ route('attendance.list', ['month' => $nextMonth]) }}" class="nav__button">翌月<img src="{{ asset('images/icon/arrow-right.png') }}" alt="翌月"></a>
+        <a href="{{ route('attendance.list', ['month' => $nextMonth]) }}" class="nav__btn">翌月<img src="{{ asset('images/icon/arrow-right.png') }}" alt="翌月に進む"></a>
     </div>
 
     {{-- 当月の勤怠情報一覧 --}}
@@ -50,7 +50,7 @@
                     <td class="attendance-list__content">{{ $attendance->total_break_time }}</td>
                     <td class="attendance-list__content">{{ $attendance->total_hours }}</td>
                     <td class="attendance-list__content">
-                        <a href="{{ route('attendance.show', ['id' => $attendance->id]) }}" class="content__details">詳細</a>
+                        <a href="{{ route('attendance.show', ['id' => $attendance->id]) }}" class="content__detail">詳細</a>
                     </td>
                 </tr>
             @endforeach

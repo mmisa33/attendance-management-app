@@ -92,7 +92,7 @@ class AttendanceController extends Controller
         return redirect()->route('attendance.index');
     }
 
-    // 今日の勤怠情報を取得
+    // 本日の勤怠情報を取得
     private function getTodayAttendance()
     {
         return Attendance::where('user_id', Auth::id())
@@ -103,7 +103,7 @@ class AttendanceController extends Controller
     // 勤怠一覧ページを表示
     public function attendanceList(Request $request)
     {
-        $userId = Auth::id(); // 一般ユーザーは自分自身のID
+        $userId = Auth::id();
 
         return $this->getAttendanceList($request, $userId, 'attendance.list');
     }
@@ -165,7 +165,6 @@ class AttendanceController extends Controller
         $previousMonth = Carbon::parse($currentMonth)->subMonth()->format('Y-m');
         $nextMonth = Carbon::parse($currentMonth)->addMonth()->format('Y-m');
 
-        // ビューを返す
         return view($view, compact('attendances', 'currentMonth', 'previousMonth', 'nextMonth', 'formattedMonth'));
     }
 }
