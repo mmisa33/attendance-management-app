@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\Auth\UserAuthenticatedSessionController;
-use App\Http\Controllers\Auth\AdminAuthenticatedSessionController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 use App\Http\Controllers\User\AttendanceController  as UserAttendanceController;
 
@@ -14,27 +13,21 @@ use App\Http\Controllers\Shared\StampCorrectionRequestController as SharedStampC
 
 use Illuminate\Support\Facades\Route;
 
-// 一般ユーザー用ログイン ★Fortifyを使用しているか要確認
-Route::middleware('guest:web')->group(function () {
-    Route::get('/login', [UserAuthenticatedSessionController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [UserAuthenticatedSessionController::class, 'store'])->name('login.submit');
-});
-
-// 一般ユーザー用ログアウト
-Route::post('/logout', [UserAuthenticatedSessionController::class, 'destroy'])
+// 一般ユーザーログアウト処理
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth:web')
     ->name('logout');
 
-// 管理者用ログイン
-Route::prefix('admin')->middleware('guest:admin')->group(function () {
-    Route::get('/login', [AdminAuthenticatedSessionController::class, 'showAdminLoginForm'])->name('admin.login');
-    Route::post('/login', [AdminAuthenticatedSessionController::class, 'store'])->name('admin.login.submit');
+// 管理者ログイン・ログアウト処理
+Route::prefix('admin')->group(function () {
+    Route::get('/login', [AuthenticatedSessionController::class, 'create'])
+        ->name('admin.login');
+    Route::post('/login', [AuthenticatedSessionController::class, 'store'])
+        ->name('admin.login.submit');
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+        ->middleware('auth:admin')
+        ->name('admin.logout');
 });
-
-// 管理者用ログアウト
-Route::post('/admin/logout', [AdminAuthenticatedSessionController::class, 'destroy'])
-    ->middleware('auth:admin')
-    ->name('admin.logout');
 
 // ログインユーザー専用ページ
 Route::middleware('auth:web')->group(function () {
@@ -58,9 +51,7 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
 
 // 一般ユーザーと管理者の両方がアクセス可能
 Route::middleware(['auth.either'])->group(function () {
-    // 勤怠詳細ページ
     Route::get('/attendance/{id}', [SharedAttendanceController::class, 'show'])->name('attendance.show');
     Route::post('/attendance/{id}/update', [SharedAttendanceController::class, 'update'])->name('attendance.update');
     Route::get('/stamp_correction_request/list', [SharedStampCorrectionRequestController::class, 'list'])->name('stamp_correction_request.list');
-
 });

@@ -16,33 +16,35 @@ class FortifyServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // LoginRequestのバリデーションを使用
         $this->app->bind(FortifyLoginRequest::class, LoginRequest::class);
     }
 
     public function boot(): void
     {
+        // ユーザー登録処理
         Fortify::createUsersUsing(CreateNewUser::class);
 
-        Fortify::registerView(fn() => view('auth.register'));
-
+        // ログインページの表示
         Fortify::loginView(function (Request $request) {
             return $request->is('admin/*')
                 ? view('admin.auth.login')
                 : view('auth.login');
         });
 
+        // ログイン認証処理
         Fortify::authenticateUsing(function (Request $request) {
             $guard = $request->is('admin/*') ? 'admin' : 'web';
             $credentials = $request->only('email', 'password');
 
             if (Auth::guard($guard)->attempt($credentials, $request->filled('remember'))) {
+                $request->session()->regenerate();
                 return Auth::guard($guard)->user();
             }
 
             return null;
         });
 
+        // ログイン試行のレート制限
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->email;
             return Limit::perMinute(10)->by($email . $request->ip());

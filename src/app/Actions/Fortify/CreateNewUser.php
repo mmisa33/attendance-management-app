@@ -20,7 +20,7 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        // RegisterRequest の静的メソッドを使用
+        // RegisterRequestの静的メソッドを使用
         $validator = Validator::make(
             $input,
             RegisterRequest::rulesStatic(),
