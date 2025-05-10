@@ -7,14 +7,22 @@
 @section('link')
 {{-- ヘッダーリンク --}}
 <div class="header__links">
-    <a class="header__link" href="{{ route('attendance.index') }}">勤怠</a>
-    <a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a>
-    <a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a>
-    <form action="{{ route('logout') }}" method="POST">
-        @csrf
-        <input class="header__link" type="submit" value="ログアウト">
-    </form>
-</div>
+    @if(session('clock_out_completed'))
+        <a class="header__link" href="{{ route('attendance.list') }}">今月の勤怠一覧</a>
+        <a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請一覧</a>
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <input class="header__link" type="submit" value="ログアウト">
+        </form>
+    @else
+        <a class="header__link" href="{{ route('attendance.index') }}">勤怠</a>
+        <a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a>
+        <a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a>
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <input class="header__link" type="submit" value="ログアウト">
+        </form>
+    @endif
 @endsection
 
 @section('content')
@@ -22,7 +30,7 @@
 
     {{-- 勤務ステータス --}}
     <div class="attendance__status">
-        <p>{{ $attendance->status }}</p>
+        <p><p>{{ $attendance ? $attendance->status : '勤務外' }}</p></p>
     </div>
 
     {{-- 現在の年月日 --}}
@@ -38,7 +46,7 @@
     {{-- 出勤・退勤・休憩ボタン --}}
     <div class="attendance__actions">
 
-        @if($attendance->status === $attendanceStatuses['off'])
+        @if(is_null($attendance) || $attendance->status === $attendanceStatuses['off'])
         {{-- 出勤ボタン --}}
             <form class="attendance__form" method="POST" action="{{ route('attendance.clockIn') }}">
                 @csrf

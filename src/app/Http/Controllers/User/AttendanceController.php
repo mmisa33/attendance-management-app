@@ -14,10 +14,9 @@ class AttendanceController extends Controller
     public function index()
     {
         $today = Carbon::today();
-        $attendance = Attendance::firstOrCreate(
-            ['user_id' => Auth::id(), 'date' => $today],
-            ['status' => Attendance::STATUS_OFF]  // 定数を使用
-        );
+        $attendance = Attendance::where('user_id', Auth::id())
+            ->where('date', $today)
+            ->first();
 
         // 定数をビューに渡す
         $attendanceStatuses = [
@@ -37,11 +36,22 @@ class AttendanceController extends Controller
     {
         $attendance = $this->getTodayAttendance();
 
-        if ($attendance->status === Attendance::STATUS_OFF) {
-            $attendance->update([
+        if (!$attendance) {
+            // 新しいレコードを作成
+            $attendance = Attendance::create([
+                'user_id' => Auth::id(),
+                'date' => Carbon::today(),
                 'status' => Attendance::STATUS_WORKING,
                 'start_time' => Carbon::now(),
             ]);
+        } else {
+            // 出勤していない場合にのみステータスと開始時間を更新
+            if ($attendance->status !== Attendance::STATUS_WORKING) {
+                $attendance->update([
+                    'status' => Attendance::STATUS_WORKING,
+                    'start_time' => Carbon::now(),
+                ]);
+            }
         }
 
         return redirect()->route('attendance.index');
@@ -52,7 +62,7 @@ class AttendanceController extends Controller
     {
         $attendance = $this->getTodayAttendance();
 
-        if ($attendance->status === Attendance::STATUS_WORKING) {
+        if ($attendance && $attendance->status === Attendance::STATUS_WORKING) {
             $attendance->update(['status' => Attendance::STATUS_BREAK]);
             $attendance->breakTimes()->create(['break_start' => Carbon::now()]);
         }
@@ -65,7 +75,7 @@ class AttendanceController extends Controller
     {
         $attendance = $this->getTodayAttendance();
 
-        if ($attendance->status === Attendance::STATUS_BREAK) {
+        if ($attendance && $attendance->status === Attendance::STATUS_BREAK) {
             $attendance->update(['status' => Attendance::STATUS_WORKING]);
 
             $lastBreak = $attendance->breakTimes()->whereNull('break_end')->latest()->first();
@@ -82,7 +92,7 @@ class AttendanceController extends Controller
     {
         $attendance = $this->getTodayAttendance();
 
-        if ($attendance->status === Attendance::STATUS_WORKING) {
+        if ($attendance && $attendance->status === Attendance::STATUS_WORKING) {
             $attendance->update([
                 'status' => Attendance::STATUS_DONE,
                 'end_time' => Carbon::now(),
