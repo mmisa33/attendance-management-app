@@ -25,13 +25,13 @@
     {{-- ナビ --}}
     <div class="admin-attendance-list__nav">
         <a href="{{ route('admin.attendance.list', ['date' => $previousDate->format('Y-m-d')]) }}" class="nav__button">
-            <img src="{{ asset('images/icon/arrow-left.png') }}" alt="前日">前日
+            <img src="{{ asset('images/icon/arrow-left.png') }}" alt="前日へ戻る">前日
         </a>
         <h3 class="nav__month">
             <img src="{{ asset('images/icon/calender.png') }}" alt="カレンダー">{{ $currentDate->format('Y年m月d日') }}
         </h3>
         <a href="{{ route('admin.attendance.list', ['date' => $nextDate->format('Y-m-d')]) }}" class="nav__button">
-            翌日<img src="{{ asset('images/icon/arrow-right.png') }}" alt="翌日">
+            翌日<img src="{{ asset('images/icon/arrow-right.png') }}" alt="翌日へ進む">
         </a>
     </div>
 
@@ -51,12 +51,12 @@
             @foreach ($attendances as $attendance)
                 <tr class="admin-attendance-list__row">
                     <td class="admin-attendance-list__content">{{ $attendance->user->name }}</td>
-                    <td class="admin-attendance-list__content">{{ $attendance->start_time_formatted ?? '' }}</td>
-                    <td class="admin-attendance-list__content">{{ $attendance->end_time_formatted ?? '' }}</td>
-                    <td class="admin-attendance-list__content">{{ $attendance->total_break_time ?? '' }}</td>
-                    <td class="admin-attendance-list__content">{{ $attendance->total_hours ?? '' }}</td>
+                    <td class="admin-attendance-list__content">{{ $attendance->start_time_formatted }}</td>
+                    <td class="admin-attendance-list__content">{{ $attendance->end_time_formatted }}</td>
+                    <td class="admin-attendance-list__content">{{ $attendance->total_break_time }}</td>
+                    <td class="admin-attendance-list__content">{{ $attendance->total_hours }}</td>
                     <td class="admin-attendance-list__content">
-                        <a href="{{ route('attendance.show', ['id' => $attendance->id]) }}" class="content__details">詳細</a>
+                        <a href="{{ route('attendance.show', ['id' => $attendance->id]) }}" class="content__detail">詳細</a>
                     </td>
                 </tr>
             @endforeach

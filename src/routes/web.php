@@ -32,10 +32,10 @@ Route::prefix('admin')->group(function () {
 // ログインユーザー専用ページ
 Route::middleware('auth:web')->group(function () {
     Route::get('/attendance', [UserAttendanceController::class, 'index'])->name('attendance.index');
-    Route::post('/attendance/clock-in', [UserAttendanceController::class, 'clockIn'])->name('attendance.clockIn');
-    Route::post('/attendance/break-start', [UserAttendanceController::class, 'breakStart'])->name('attendance.breakStart');
-    Route::post('/attendance/break-end', [UserAttendanceController::class, 'breakEnd'])->name('attendance.breakEnd');
-    Route::post('/attendance/clock-out', [UserAttendanceController::class, 'clockOut'])->name('attendance.clockOut');
+    Route::post('/attendance/start-work', [UserAttendanceController::class, 'startWork'])->name('attendance.startWork');
+    Route::post('/attendance/start-break', [UserAttendanceController::class, 'startBreak'])->name('attendance.startBreak');
+    Route::post('/attendance/end-break', [UserAttendanceController::class, 'endBreak'])->name('attendance.endBreak');
+    Route::post('/attendance/end-work', [UserAttendanceController::class, 'endWork'])->name('attendance.endWork');
     Route::get('/attendance/list', [UserAttendanceController::class, 'attendanceList'])->name('attendance.list');
 });
 

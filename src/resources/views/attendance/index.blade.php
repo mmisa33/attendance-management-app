@@ -30,7 +30,7 @@
 
     {{-- 勤務ステータス --}}
     <div class="attendance__status">
-        <p>{{ $attendance ? $attendance->status : '勤務外' }}</>
+        <p>{{ $attendance ? $attendance->status : '勤務外' }}</p>
     </div>
 
     {{-- 現在の年月日 --}}
@@ -48,27 +48,27 @@
 
         @if(is_null($attendance) || $attendance->status === $attendanceStatuses['off'])
         {{-- 出勤ボタン --}}
-            <form class="attendance__form" method="POST" action="{{ route('attendance.clockIn') }}">
+            <form class="attendance__form" method="POST" action="{{ route('attendance.startWork') }}">
                 @csrf
                 <button class="attendance__btn" type="submit">出勤</button>
             </form>
 
         @elseif($attendance->status === $attendanceStatuses['working'])
         {{-- 退勤ボタン --}}
-            <form class="attendance__form" method="POST" action="{{ route('attendance.clockOut') }}">
+            <form class="attendance__form" method="POST" action="{{ route('attendance.endWork') }}">
                 @csrf
                 <button class="attendance__btn" type="submit">退勤</button>
             </form>
 
             {{-- 休憩開始ボタン --}}
-            <form class="attendance__form attendance__form--break" method="POST" action="{{ route('attendance.breakStart') }}">
+            <form class="attendance__form attendance__form--break" method="POST" action="{{ route('attendance.startBreak') }}">
                 @csrf
                 <button class="attendance__btn attendance__btn--break" type="submit">休憩入</button>
             </form>
 
         @elseif($attendance->status === $attendanceStatuses['break'])
             {{-- 休憩終了ボタン --}}
-            <form class="attendance__form attendance__form--break" method="POST" action="{{ route('attendance.breakEnd') }}">
+            <form class="attendance__form attendance__form--break" method="POST" action="{{ route('attendance.endBreak') }}">
                 @csrf
                 <button class="attendance__btn attendance__btn--break" type="submit">休憩戻</button>
             </form>
@@ -89,7 +89,8 @@
         timeElement.textContent = `${hours}:${minutes}`;
     }
 
-    const UPDATE_INTERVAL_MS = 60000;
+    // 1分ごとに時間を更新
+    const UPDATE_INTERVAL_MS = 60 * 1000; // 60秒 = 1分
     setInterval(updateTime, UPDATE_INTERVAL_MS);
 </script>
 @endsection
