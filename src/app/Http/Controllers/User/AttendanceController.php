@@ -146,25 +146,31 @@ class AttendanceController extends Controller
                 ? Carbon::parse($attendance->end_time)->format('H:i')
                 : '';
 
-            // 休憩時間合計（分単位）
-            $totalBreakMinutes = $attendance->breakTimes && $attendance->breakTimes->isNotEmpty()
-                ? $attendance->breakTimes->sum(function ($breakTime) {
-                    return Carbon::parse($breakTime->break_start)
-                        ->diffInMinutes(Carbon::parse($breakTime->break_end));
-                })
-                : 0;
-
-            $attendance->total_break_time = floor($totalBreakMinutes / 60) . ':' . str_pad($totalBreakMinutes % 60, 2, '0', STR_PAD_LEFT);
-
-            // 労働時間合計（分単位）
-            if ($attendance->start_time && $attendance->end_time) {
-                $start = Carbon::parse($attendance->start_time);
-                $end = Carbon::parse($attendance->end_time);
-                $totalMinutes = $end->diffInMinutes($start);
-
-                $attendance->total_hours = floor($totalMinutes / 60) . ':' . str_pad($totalMinutes % 60, 2, '0', STR_PAD_LEFT);
+            // 退勤していない場合は休憩時間と労働時間を空白
+            if ($attendance->status !== Attendance::STATUS_DONE) {
+                $attendance->total_break_time = '';
+                $attendance->total_hours = '';
             } else {
-                $attendance->total_hours = '0:00';
+                // 休憩時間合計（分単位）
+                $totalBreakMinutes = $attendance->breakTimes && $attendance->breakTimes->isNotEmpty()
+                    ? $attendance->breakTimes->sum(function ($breakTime) {
+                        return Carbon::parse($breakTime->break_start)
+                            ->diffInMinutes(Carbon::parse($breakTime->break_end));
+                    })
+                    : 0;
+
+                $attendance->total_break_time = floor($totalBreakMinutes / 60) . ':' . str_pad($totalBreakMinutes % 60, 2, '0', STR_PAD_LEFT);
+
+                // 労働時間合計（分単位）
+                if ($attendance->start_time && $attendance->end_time) {
+                    $start = Carbon::parse($attendance->start_time);
+                    $end = Carbon::parse($attendance->end_time);
+                    $totalMinutes = $end->diffInMinutes($start);
+
+                    $attendance->total_hours = floor($totalMinutes / 60) . ':' . str_pad($totalMinutes % 60, 2, '0', STR_PAD_LEFT);
+                } else {
+                    $attendance->total_hours = '0:00';
+                }
             }
         }
 

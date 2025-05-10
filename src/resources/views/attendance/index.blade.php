@@ -30,7 +30,7 @@
 
     {{-- 勤務ステータス --}}
     <div class="attendance__status">
-        <p><p>{{ $attendance ? $attendance->status : '勤務外' }}</p></p>
+        <p>{{ $attendance ? $attendance->status : '勤務外' }}</>
     </div>
 
     {{-- 現在の年月日 --}}
