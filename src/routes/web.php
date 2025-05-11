@@ -13,6 +13,9 @@ use App\Http\Controllers\Shared\StampCorrectionRequestController as SharedStampC
 
 use Illuminate\Support\Facades\Route;
 
+// メール認証チェック
+Route::get('/verify/check', [AuthenticatedSessionController::class, 'verifyCheck'])->name('verify.check');
+
 // 一般ユーザーログアウト処理
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth:web')
@@ -30,7 +33,7 @@ Route::prefix('admin')->group(function () {
 });
 
 // ログインユーザー専用ページ
-Route::middleware('auth:web')->group(function () {
+Route::middleware('auth:web', 'verified')->group(function () {
     Route::get('/attendance', [UserAttendanceController::class, 'index'])->name('attendance.index');
     Route::post('/attendance/start-work', [UserAttendanceController::class, 'startWork'])->name('attendance.startWork');
     Route::post('/attendance/start-break', [UserAttendanceController::class, 'startBreak'])->name('attendance.startBreak');

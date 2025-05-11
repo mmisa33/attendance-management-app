@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -54,5 +55,25 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route($redirectRoute);
+    }
+
+    // メール認証チェック
+    public function verifyCheck()
+    {
+        $user = Auth::user();
+
+        // 管理者はメール認証を行わないのでスキップ
+        if (Auth::guard('admin')->check()) {
+            return redirect()->route('admin.attendance.list');
+        }
+
+        // 一般ユーザーで、かつメール認証が完了している場合はリダイレクト
+        if ($user instanceof MustVerifyEmail && $user->hasVerifiedEmail()) {
+            return redirect()->route('attendance.index');
+        }
+
+        // 認証が完了していない場合、エラーメッセージを表示
+        return redirect()->route('verification.notice')
+            ->with('error', 'メール認証が完了していません');
     }
 }

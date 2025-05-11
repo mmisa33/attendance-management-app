@@ -24,6 +24,16 @@ class FortifyServiceProvider extends ServiceProvider
         // ユーザー登録処理
         Fortify::createUsersUsing(CreateNewUser::class);
 
+        // ユーザー登録ページの表示
+        Fortify::registerView(function () {
+            return view('auth.register');
+        });
+
+        // メール認証ページの表示
+        Fortify::verifyEmailView(function () {
+            return view('auth.verify');
+        });
+
         // ログインページの表示
         Fortify::loginView(function (Request $request) {
             return $request->is('admin/*')

@@ -55,7 +55,7 @@
                         <td class="attendance-staff__content">{{ $attendance->total_break_time }}</td>
                         <td class="attendance-staff__content">{{ $attendance->total_hours }}</td>
                         <td class="attendance-staff__content">
-                            <a href="{{ route('attendance.show', ['id' => $attendance->id]) }}" class="content__details">詳細</a>
+                            <a href="{{ route('admin.attendance.show', ['id' => $attendance->id]) }}" class="content__details">詳細</a>
                         </td>
                     </tr>
                 @empty
