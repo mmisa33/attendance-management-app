@@ -45,8 +45,8 @@
             @foreach ($attendances as $attendance)
                 <tr class="attendance-list__row">
                     <td class="attendance-list__content">{{ $attendance->formatted_date }}</td>
-                    <td class="attendance-list__content">{{ $attendance->start_time_formatted }}</td>
-                    <td class="attendance-list__content">{{ $attendance->end_time_formatted }}</td>
+                    <td class="attendance-list__content">{{ $attendance->formatted_start_time }}</td>
+                    <td class="attendance-list__content">{{ $attendance->formatted_end_time }}</td>
                     <td class="attendance-list__content">{{ $attendance->total_break_time }}</td>
                     <td class="attendance-list__content">{{ $attendance->total_hours }}</td>
                     <td class="attendance-list__content">

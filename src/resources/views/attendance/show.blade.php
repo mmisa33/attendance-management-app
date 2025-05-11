@@ -8,7 +8,7 @@
 {{-- ヘッダーリンク --}}
 <div class="header__links">
     {{-- 管理者用 --}}
-    @if (auth()->guard('admin')->check())
+    @auth('admin')
         <a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a>
         <a class="header__link" href="{{ route('admin.staff.list') }}">スタッフ一覧</a>
         <a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請一覧</a>
@@ -16,8 +16,10 @@
             @csrf
             <input class="header__link" type="submit" value="ログアウト">
         </form>
-        {{-- 一般ユーザー用 --}}
-    @elseif(auth()->guard('web')->check())
+    @endauth
+
+    {{-- 一般ユーザー用 --}}
+    @auth('web')
         <a class="header__link" href="{{ route('attendance.index') }}">勤怠</a>
         <a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a>
         <a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a>
@@ -25,7 +27,7 @@
             @csrf
             <input class="header__link" type="submit" value="ログアウト">
         </form>
-    @endif
+    @endauth
 </div>
 @endsection
 
@@ -33,6 +35,7 @@
 <div class="attendance-detail">
     <h2 class="attendance-detail__heading">勤怠詳細</h2>
 
+    {{-- 勤怠詳細フォーム --}}
     <form class="attendance-detail__form" method="POST"
         action="{{ route('attendance.update', ['id' => $attendance->id]) }}" novalidate>
         @csrf
@@ -42,14 +45,7 @@
             <tr class="attendance-detail__row">
                 <th class="attendance-detail__header">名前</th>
                 <td class="attendance-detail__content attendance-detail__content--name">
-                    {{-- 管理者が他のユーザーの勤怠を見ているので選択されたユーザー名を表示 --}}
-                    @if (Auth::guard('admin')->check())
-                        {{ $user->name }}
-
-                        {{-- 一般ユーザーは自分の名前を表示 --}}
-                    @elseif(Auth::guard('web')->check())
-                        {{ $user->name }}
-                    @endif
+                    {{ $user->name }}
                 </td>
             </tr>
 
@@ -65,23 +61,17 @@
             {{-- 出勤・退勤 --}}
             <tr class="attendance-detail__row">
                 <th class="attendance-detail__header">出勤・退勤</th>
-                <td
-                    class="attendance-detail__content attendance-detail__content--time @if ($attendance->is_modified) modified @endif">
-                    <input type="text" name="start_time" id="start_time"
-                        value="{{ old('start_time', substr($attendance->start_time, 11, 5)) }}" pattern="\d{2}:\d{2}"
-                        class="content__time" @if ($attendance->is_modified) disabled @endif>
+                <td class="attendance-detail__content attendance-detail__content--time @if ($attendance->is_modified) modified @endif">
+                    <input type="text" name="start_time" id="start_time" value="{{ old('start_time', $attendance->formatted_start_time) }}" class="content__time" @if ($attendance->is_modified) disabled @endif>
                     <span class="content__time-separator">～</span>
-                    <input type="text" name="end_time" id="end_time"
-                        value="{{ old('end_time', substr($attendance->end_time, 11, 5)) }}" pattern="\d{2}:\d{2}"
-                        class="content__time" @if ($attendance->is_modified) disabled @endif>
+                    <input type="text" name="end_time" id="end_time" value="{{ old('end_time', $attendance->formatted_end_time) }}" class="content__time" @if ($attendance->is_modified) disabled @endif>
 
                     {{-- エラーメッセージ --}}
-                    @error('start_time')
-                        <div class="error-message">{{ $message }}</div>
-                    @enderror
-                    @error('end_time')
-                        <div class="error-message">{{ $message }}</div>
-                    @enderror
+                    @foreach (['start_time', 'end_time'] as $field)
+                        @error($field)
+                            <div class="error-message">{{ $message }}</div>
+                        @enderror
+                    @endforeach
                 </td>
             </tr>
 
@@ -89,41 +79,51 @@
             @foreach ($breakRows as $breakRow)
                 <tr class="attendance-detail__row">
                     <th class="attendance-detail__header">
-                        {{-- 休憩1の場合は「休憩」それ以外は「休憩2」「休憩3」 --}}
-                        @if ($breakRow['index'] == 0)
-                            休憩
-                        @else
-                            休憩{{ $breakRow['index'] + 1 }}
-                        @endif
+                        休憩{{ $breakRow['index'] == 0 ? '' : $breakRow['index'] + 1 }}
                     </th>
-                    <td
-                        class="attendance-detail__content attendance-detail__content--time @if ($attendance->is_modified) modified @endif">
-                        <input type="text" name="break_start[{{ $breakRow['index'] }}]"
-                            value="{{ $breakRow['start'] }}" pattern="\d{2}:\d{2}" class="content__time"
-                            @if ($attendance->is_modified) disabled @endif>
+                    <td class="attendance-detail__content attendance-detail__content--time @if ($attendance->is_modified) modified @endif">
+                        <input type="text" name="break_start[{{ $breakRow['index'] }}]" value="{{ old('break_start.' . $breakRow['index'], $breakRow['start']) }}" class="content__time" @if ($attendance->is_modified) disabled @endif>
 
                         @if (!$attendance->is_modified || $breakRow['start'])
                             <span class="content__time-separator">～</span>
                         @endif
 
-                        <input type="text" name="break_end[{{ $breakRow['index'] }}]"
-                            value="{{ $breakRow['end'] }}" pattern="\d{2}:\d{2}" class="content__time"
-                            @if ($attendance->is_modified) disabled @endif>
+                        <input type="text" name="break_end[{{ $breakRow['index'] }}]" value="{{ old('break_end.' . $breakRow['index'], $breakRow['end']) }}" class="content__time" @if ($attendance->is_modified) disabled @endif>
 
                         {{-- エラーメッセージ --}}
-                        @if ($errors->has("break_start.{$breakRow['index']}"))
-                            <div class="error-message">
-                                {{ $errors->first("break_start.{$breakRow['index']}") }}
-                            </div>
-                        @endif
-                        @if ($errors->has("break_end.{$breakRow['index']}"))
-                            <div class="error-message">
-                                {{ $errors->first("break_end.{$breakRow['index']}") }}
-                            </div>
-                        @endif
+                        @foreach (["break_start.{$breakRow['index']}", "break_end.{$breakRow['index']}"] as $field)
+                            @error($field)
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        @endforeach
                     </td>
                 </tr>
             @endforeach
+
+            {{-- 休憩開始が一度でも押された場合に、空の休憩行を追加 --}}
+            @if (collect($breakRows)->contains(fn($breakRow) => !empty($breakRow['start'])))
+                <tr class="attendance-detail__row">
+                    <th class="attendance-detail__header">
+                        休憩{{ count($breakRows) + 1 }}
+                    </th>
+                    <td class="attendance-detail__content attendance-detail__content--time @if ($attendance->is_modified) modified @endif">
+                        <input type="text" name="break_start[{{ count($breakRows) }}]" value="" class="content__time" @if ($attendance->is_modified) disabled @endif>
+
+                        @if (!$attendance->is_modified)
+                            <span class="content__time-separator">～</span>
+                        @endif
+
+                        <input type="text" name="break_end[{{ count($breakRows) }}]" value="" class="content__time" @if ($attendance->is_modified) disabled @endif>
+
+                        {{-- エラーメッセージ --}}
+                        @foreach (["break_start." . count($breakRows), "break_end." . count($breakRows)] as $field)
+                            @error($field)
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        @endforeach
+                    </td>
+                </tr>
+            @endif
 
             {{-- 備考 --}}
             <tr class="attendance-detail__row">
@@ -131,8 +131,7 @@
                 <td
                     class="attendance-detail__content attendance-detail__content--textarea
                 @if ($attendance->is_modified) modified @endif">
-                    <textarea class="content__textarea" name="note" id="note" rows="2"
-                        @if ($attendance->is_modified) disabled @endif>{{ old('note', $attendance->note) }}</textarea>
+                    <textarea class="content__textarea" name="note" id="note" rows="2" @if ($attendance->is_modified) disabled @endif>{{ old('note', $attendance->note) }}</textarea>
 
                     {{-- エラーメッセージ --}}
                     @error('note')
@@ -142,20 +141,22 @@
             </tr>
         </table>
 
-                {{-- 修正申請ボタン --}}
-        @if (!$attendance->is_modified && !$attendance->is_approved)
-            <button type="submit" class="attendance-detail__button">修正</button>
-        @endif
+        <div class="attendance-detail__actions">
+            {{-- 修正申請ボタン --}}
+            @if (!$attendance->is_modified && !$attendance->is_approved)
+                <button type="submit" class="attendance-detail__btn">修正</button>
+            @endif
 
-        {{-- 申請中の場合 --}}
-        @if ($attendance->is_modified && !$attendance->is_approved)
-            <div class="alert-message">*承認待ちのため修正はできません。</div>
-        @endif
+            {{-- 申請中の場合 --}}
+            @if ($attendance->is_modified && !$attendance->is_approved)
+                <div class="attendance-detail__alert-message">*承認待ちのため修正はできません。</div>
+            @endif
 
-        {{-- 承認済みの場合 --}}
-        @if ($attendance->is_approved)
-            <p class="attendance-detail__approved-label">承認済み</p>
-        @endif
+            {{-- 承認済みの場合 --}}
+            @if ($attendance->is_approved)
+                <p class="attendance-detail__status--approved">承認済み</p>
+            @endif
+        </div>
     </form>
 </div>
 @endsection

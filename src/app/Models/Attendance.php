@@ -49,32 +49,57 @@ class Attendance extends Model
         return $date->locale('ja')->format('m/d') . '(' . $date->isoFormat('ddd') . ')';
     }
 
+    // 日付の「YYYY年」と「n月j日」のフォーマット
+    public function getFormattedYearAttribute()
+    {
+        return Carbon::parse($this->date)->format('Y') . '年';
+    }
+
+    public function getFormattedMonthdayAttribute()
+    {
+        return Carbon::parse($this->date)->format('n') . '月' . Carbon::parse($this->date)->format('j') . '日';
+    }
+
     // 開始時間のフォーマット
-    public function getStartTimeFormattedAttribute()
+    public function getFormattedStartTimeAttribute()
     {
         return $this->start_time ? Carbon::parse($this->start_time)->format('H:i') : '';
     }
 
     // 終了時間のフォーマット
-    public function getEndTimeFormattedAttribute()
+    public function getFormattedEndTimeAttribute()
     {
         return $this->end_time ? Carbon::parse($this->end_time)->format('H:i') : '';
+    }
+
+    // 休憩データの整形
+    public function getFormattedBreakRowsAttribute()
+    {
+        $breakTimes = $this->breakTimes;
+        $breakRows = $breakTimes->map(function ($breakTime, $index) {
+            $endTime = $breakTime->break_end ? Carbon::parse($breakTime->break_end)->format('H:i') : '';
+            return [
+                'index' => $index,
+                'start' => Carbon::parse($breakTime->break_start)->format('H:i'),
+                'end' => $endTime,
+            ];
+        })->toArray();
+
+        if (empty($breakRows)) {
+            $breakRows[] = ['index' => 0, 'start' => '', 'end' => ''];
+        }
+
+        return $breakRows;
     }
 
     // 休憩時間の合計をフォーマット
     public function getTotalBreakTimeAttribute()
     {
         if ($this->status !== self::STATUS_DONE) {
-            return ''; // 退勤していない場合や出勤・退勤時間が未設定の場合は空白にする
+            return ''; // 退勤していない場合は空白にする
         }
 
-        $totalBreakMinutes = $this->breakTimes->reduce(function ($carry, $breakTime) {
-            if ($breakTime->break_start && $breakTime->break_end) {
-                $carry += Carbon::parse($breakTime->break_start)
-                    ->diffInMinutes(Carbon::parse($breakTime->break_end));
-            }
-            return $carry;
-        }, 0);
+        $totalBreakMinutes = $this->calculateTotalBreakTime($this->breakTimes);
 
         $hours = floor($totalBreakMinutes / self::MINUTES_IN_HOUR);
         $minutes = $totalBreakMinutes % self::MINUTES_IN_HOUR;
@@ -89,19 +114,35 @@ class Attendance extends Model
             return ''; // 退勤していない場合や出勤・退勤時間が未設定の場合は空白にする
         }
 
-        $startTime = Carbon::parse($this->start_time);
-        $endTime = Carbon::parse($this->end_time);
+        return $this->getFormattedWorkTime($this->start_time, $this->end_time, $this->breakTimes);
+    }
 
-        $totalMinutes = $startTime->diffInMinutes($endTime);
-
-        // 休憩時間の分を減算
-        $totalBreakMinutes = $this->breakTimes->reduce(function ($carry, $breakTime) {
+    // 休憩時間の合計を計算
+    private function calculateTotalBreakTime($breakTimes)
+    {
+        return $breakTimes->reduce(function ($carry, $breakTime) {
             if ($breakTime->break_start && $breakTime->break_end) {
                 $carry += Carbon::parse($breakTime->break_start)
                     ->diffInMinutes(Carbon::parse($breakTime->break_end));
             }
             return $carry;
         }, 0);
+    }
+
+    // 労働時間の合計を計算
+    private function getFormattedWorkTime($startTime, $endTime, $breakTimes)
+    {
+        if ($this->status !== self::STATUS_DONE || !$startTime || !$endTime) {
+            return '0:00';
+        }
+
+        $start = Carbon::parse($startTime);
+        $end = Carbon::parse($endTime);
+
+        $totalMinutes = $start->diffInMinutes($end);
+
+        // 休憩時間の分を減算
+        $totalBreakMinutes = $this->calculateTotalBreakTime($breakTimes);
 
         $totalMinutes -= $totalBreakMinutes;
 
@@ -113,5 +154,52 @@ class Attendance extends Model
         $minutes = $totalMinutes % self::MINUTES_IN_HOUR;
 
         return sprintf("%d:%02d", $hours, $minutes);
+    }
+
+    public function updateAttendance($validated, $isAdmin = false)
+    {
+        // 既存の開始時間、終了時間、備考を更新
+        $this->start_time = $this->date . ' ' . $validated['start_time'] . ':00';
+        $this->end_time = $this->date . ' ' . $validated['end_time'] . ':00';
+        $this->note = $validated['note'];
+
+        // 管理者が修正している場合は、修正申請状態を解除
+        if ($isAdmin) {
+            $this->is_modified = false;
+        } else {
+            // 一般ユーザーの場合は、修正申請中の状態に変更
+            $this->is_modified = true;
+        }
+
+        // 勤怠情報を保存
+        $this->save();
+
+        // 既存の休憩時間を更新
+        foreach ($this->breakTimes as $i => $breakTime) {
+            $startInput = $validated['break_start'][$i] ?? null;
+            $endInput = $validated['break_end'][$i] ?? null;
+
+            if ($startInput && $endInput) {
+                $breakTime->break_start = $this->date . ' ' . $startInput . ':00';
+                $breakTime->break_end = $this->date . ' ' . $endInput . ':00';
+                $breakTime->save();
+            }
+        }
+
+        // 新規休憩時間を追加
+        $existingCount = count($this->breakTimes);
+        $additionalStarts = array_slice($validated['break_start'], $existingCount);
+        $additionalEnds = array_slice($validated['break_end'], $existingCount);
+
+        foreach ($additionalStarts as $i => $start) {
+            $end = $additionalEnds[$i] ?? null;
+
+            if ($start && $end) {
+                $this->breakTimes()->create([
+                    'break_start' => $this->date . ' ' . $start . ':00',
+                    'break_end' => $this->date . ' ' . $end . ':00',
+                ]);
+            }
+        }
     }
 }

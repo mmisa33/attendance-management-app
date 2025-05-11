@@ -49,7 +49,7 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::post('/stamp_correction_request/approve/{id}', [AdminStampCorrectionRequestController::class, 'approve'])->name('admin.stamp_correction_request.approve');
 });
 
-// 一般ユーザーと管理者の両方がアクセス可能
+// 一般ユーザーと管理者の両方がアクセス可能なページ
 Route::middleware(['auth.either'])->group(function () {
     Route::get('/attendance/{id}', [SharedAttendanceController::class, 'show'])->name('attendance.show');
     Route::post('/attendance/{id}/update', [SharedAttendanceController::class, 'update'])->name('attendance.update');
