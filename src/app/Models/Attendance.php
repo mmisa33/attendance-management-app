@@ -202,4 +202,44 @@ class Attendance extends Model
             }
         }
     }
+
+    // ユーザー指定のスコープ
+    public function scopeOfUser($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+
+    // 月指定のスコープ
+    public function scopeOfMonth($query, $month)
+    {
+        $startOfMonth = Carbon::parse($month)->startOfMonth();
+        $endOfMonth = Carbon::parse($month)->endOfMonth();
+        return $query->whereBetween('date', [$startOfMonth, $endOfMonth])
+            ->orderBy('date', 'asc');
+    }
+
+    // 日付指定のスコープ
+    public function scopeByDate($query, $date)
+    {
+        return $query->whereDate('date', $date);
+    }
+
+    // ユーザー指定＆月指定のスコープ
+    public function scopeByUserAndMonth($query, $userId, $month)
+    {
+        return $query->ofUser($userId)
+            ->ofMonth($month);
+    }
+
+    // CSVエクスポート用データ生成
+    public function toCsvRow()
+    {
+        return [
+            $this->formatted_date,
+            $this->formatted_start_time,
+            $this->formatted_end_time,
+            $this->total_break_time,
+            $this->total_hours,
+        ];
+    }
 }

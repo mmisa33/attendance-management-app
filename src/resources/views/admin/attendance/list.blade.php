@@ -24,13 +24,13 @@
 
     {{-- ナビ --}}
     <div class="admin-attendance-list__nav">
-        <a href="{{ route('admin.attendance.list', ['date' => $previousDate->format('Y-m-d')]) }}" class="nav__button">
+        <a href="{{ route('admin.attendance.list', ['date' => $previousDate->format('Y-m-d')]) }}" class="nav__btn">
             <img src="{{ asset('images/icon/arrow-left.png') }}" alt="前日へ戻る">前日
         </a>
         <h3 class="nav__month">
             <img src="{{ asset('images/icon/calender.png') }}" alt="カレンダー">{{ $currentDate->format('Y年m月d日') }}
         </h3>
-        <a href="{{ route('admin.attendance.list', ['date' => $nextDate->format('Y-m-d')]) }}" class="nav__button">
+        <a href="{{ route('admin.attendance.list', ['date' => $nextDate->format('Y-m-d')]) }}" class="nav__btn">
             翌日<img src="{{ asset('images/icon/arrow-right.png') }}" alt="翌日へ進む">
         </a>
     </div>

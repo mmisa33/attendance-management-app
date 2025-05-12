@@ -31,7 +31,7 @@ body {
     border-radius: 10px;
 }
 
-.nav__button {
+.nav__btn {
     display: flex;
     align-items: center;
     font-weight: bold;
@@ -52,7 +52,7 @@ body {
     width: 25px;
 }
 
-.nav__button img {
+.nav__btn img {
     height: 15px;
     width: 20px;
     margin: 0 10px;
@@ -86,7 +86,7 @@ body {
     border-bottom: none;
 }
 
-.content__details {
+.content__detail {
     color: #000000;
 }
 

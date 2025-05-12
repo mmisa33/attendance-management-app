@@ -93,31 +93,33 @@ class AttendanceController extends Controller
         return redirect()->route('attendance.index');
     }
 
+    // 本日の勤怠情報を取得
+    private function getTodayAttendance()
+    {
+        return Attendance::ofUser(Auth::id())
+            ->ofMonth(Carbon::today()->format('Y-m'))
+            ->whereDate('date', Carbon::today())
+            ->first();
+    }
+
     // 勤怠一覧ページを表示
     public function attendanceList(Request $request)
     {
-        $userId = Auth::id();
         $currentMonth = $request->input('month', Carbon::now()->format('Y-m'));
-        $startOfMonth = Carbon::parse($currentMonth)->startOfMonth();
-        $endOfMonth = Carbon::parse($currentMonth)->endOfMonth();
-
-        $attendances = Attendance::where('user_id', $userId)
-            ->whereBetween('date', [$startOfMonth, $endOfMonth])
-            ->orderBy('date', 'asc')
+        $attendances = Attendance::ofUser(Auth::id())
+            ->ofMonth($currentMonth)
             ->get();
 
         $formattedMonth = Carbon::parse($currentMonth)->format('Y/m');
         $previousMonth = Carbon::parse($currentMonth)->subMonth()->format('Y-m');
         $nextMonth = Carbon::parse($currentMonth)->addMonth()->format('Y-m');
 
-        return view('attendance.list', compact('attendances', 'currentMonth', 'previousMonth', 'nextMonth', 'formattedMonth'));
-    }
-
-    // 本日の勤怠情報を取得
-    private function getTodayAttendance()
-    {
-        return Attendance::where('user_id', Auth::id())
-            ->whereDate('date', Carbon::today())
-            ->first();
+        return view('attendance.list', compact(
+            'attendances',
+            'currentMonth',
+            'previousMonth',
+            'nextMonth',
+            'formattedMonth'
+        ));
     }
 }

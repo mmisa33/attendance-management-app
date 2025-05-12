@@ -7,6 +7,7 @@ use App\Models\User;
 
 class StaffController extends Controller
 {
+    // スタッフ一覧ページを表示
     public function index()
     {
         $staffList = User::select('id', 'name', 'email')->get();
