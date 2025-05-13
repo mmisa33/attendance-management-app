@@ -45,6 +45,9 @@ class AttendanceController extends Controller
             // 一般ユーザーがログインしている場合
             $attendance = Attendance::where('user_id', Auth::id())->findOrFail($id);
             $attendance->updateAttendance($validated, false);
+            $attendance->is_modified = true;
+            $attendance->request_date = now();
+            $attendance->save();
             $redirectRoute = 'attendance.list';
         } else {
             // ログインしていない場合はログインページへリダイレクト

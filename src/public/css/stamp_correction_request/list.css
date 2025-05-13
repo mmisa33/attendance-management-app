@@ -2,7 +2,7 @@ body {
     background-color: #F0EFF2;
 }
 
-.stamp-request-list {
+.request-list {
     text-align: center;
     width: 70vw;
     margin: 0 auto;
@@ -10,10 +10,10 @@ body {
 }
 
 /* ページタイトル */
-.stamp-request-list__heading {
+.request-list__heading {
     display: flex;
     align-items: center;
-    margin-bottom: 90px;
+    margin-bottom: 60px;
     padding-left: 20px;
     height: 40px;
     border-left: 8px solid;
@@ -22,7 +22,7 @@ body {
 }
 
 /* タブ */
-.stamp-request-list__tab {
+.request-list__tab {
     display: flex;
     margin-bottom: 50px;
     border-bottom: 1px solid #000000;
@@ -38,7 +38,7 @@ body {
 }
 
 /* 承認テーブル */
-.stamp-request-list__table {
+.request-list__table {
     width: 100%;
     border-collapse: collapse;
     background-color: #FFFFFF;
@@ -50,31 +50,31 @@ body {
     table-layout: fixed;
 }
 
-.stamp-request-list__header {
+.request-list__header {
     padding: 10px 20px;
     border-bottom: 3px solid #E1E1E1;
 }
 
-.stamp-request-list__content {
+.request-list__content {
     padding: 10px 20px;
     border-bottom: 2px solid #E1E1E1;
 }
 
-.stamp-request-list__table tr:last-child td {
+.request-list__table tr:last-child td {
     border-bottom: none;
 }
 
-.content__details {
+.content__detail {
     color: #000000;
 }
 
 /* レスポンシブデザイン (タブレット768px - 850px) */
 @media screen and (min-width: 768px) and (max-width: 850px) {
-    .stamp-request-list {
+    .request-list {
         width: 90vw;
     }
 
-    .stamp-request-list__tab {
+    .request-list__tab {
         justify-content: center;
     }
 }

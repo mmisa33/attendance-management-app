@@ -42,22 +42,35 @@ class Attendance extends Model
         return $this->hasMany(BreakTime::class);
     }
 
-    // 日付のフォーマット
+    // 日付の「MM/DD(曜日)」フォーマット
     public function getFormattedDateAttribute()
     {
         $date = Carbon::parse($this->date);
         return $date->locale('ja')->format('m/d') . '(' . $date->isoFormat('ddd') . ')';
     }
 
-    // 日付の「YYYY年」と「n月j日」のフォーマット
+    // 日付の「YYYY年」フォーマット
     public function getFormattedYearAttribute()
     {
         return Carbon::parse($this->date)->format('Y') . '年';
     }
 
+    // 日付の「n月j日」フォーマット
     public function getFormattedMonthdayAttribute()
     {
         return Carbon::parse($this->date)->format('n') . '月' . Carbon::parse($this->date)->format('j') . '日';
+    }
+
+    // 日付の「YYYY/MM/DD」フォーマット
+    public function getFormattedFullDateAttribute()
+    {
+        return Carbon::parse($this->date)->format('Y/m/d');
+    }
+
+    // 修正申請日時の「YYYY/MM/DD」フォーマット
+    public function getFormattedRequestDateAttribute()
+    {
+        return Carbon::parse($this->request_date)->format('Y/m/d');
     }
 
     // 開始時間のフォーマット

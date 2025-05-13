@@ -22,7 +22,8 @@ class CreateAttendancesTable extends Migration
             $table->timestamp('end_time')->nullable(); // 退勤時刻
             $table->text('note')->nullable(); // 備考（修正申請時のメモ）
             $table->boolean('is_modified')->default(false); // 修正申請フラグ
-            $table->boolean('is_approved')->default(false);  // 承認フラグ
+            $table->boolean('is_approved')->default(false); // 承認フラグ
+            $table->timestamp('request_date')->nullable(); // 修正申請日時
             $table->timestamps();
         });
     }

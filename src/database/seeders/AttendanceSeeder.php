@@ -33,24 +33,31 @@ class AttendanceSeeder extends Seeder
 
             // 勤怠データを挿入
             $attendance = Attendance::create([
-                'user_id' => 1, // 仮のユーザーID
-                'date' => Carbon::create(2025, 4, $i)->toDateString(),
-                'status' => '勤務中',
+                'user_id' => 1,
+                'date' => $start_time->toDateString(),
+                'status' => '退勤済',
                 'start_time' => $start_time,
                 'end_time' => $end_time,
                 'is_modified' => false,
                 'is_approved' => false,
             ]);
 
-            // 各出勤にランダムな休憩時間を設定
-            $break_start = $start_time->copy()->addHours(rand(1, 3)); // 出勤後1～3時間後に休憩開始
-            $break_end = $break_start->copy()->addMinutes(rand(30, 60)); // 休憩後30～60分で終了
+            // 複数の休憩時間を追加
+            foreach (range(1, rand(1, 3)) as $j) {
+                $break_start = $start_time->copy()->addHours(rand(1, 3))->addMinutes(rand(0, 30));
+                $break_end = $break_start->copy()->addMinutes(rand(30, 60)); // 休憩後30～60分で終了
 
-            BreakTime::create([
-                'attendance_id' => $attendance->id,
-                'break_start' => $break_start,
-                'break_end' => $break_end,
-            ]);
+                // 休憩終了が勤務終了を超えていたら調整
+                if ($break_end > $end_time) {
+                    $break_end = $end_time->copy()->subMinutes(rand(5, 15));
+                }
+
+                BreakTime::create([
+                    'attendance_id' => $attendance->id,
+                    'break_start' => $break_start,
+                    'break_end' => $break_end,
+                ]);
+            }
         }
     }
 }
