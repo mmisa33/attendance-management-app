@@ -13,17 +13,29 @@
 
 <body>
     <div class="app">
-        <header class="header {{ View::hasSection('link') ? '' : 'header--logo-only' }}">
-            {{--  サイトタイトル  --}}
+        <header class="header
+            @if(Request::is('login') || Request::is('admin/login') || Request::is('email/verify'))
+                header--logo-only
+            @endif
+        ">
             <div class="header__logo">
                 <img src="{{ asset('images/logo.svg') }}" alt="coachtech 勤怠管理アプリ">
             </div>
 
-            {{--  ヘッダーリンク   --}}
-            @yield('link')
+            @if (!Request::is('login') && !Request::is('admin/login') && !Request::is('password/*'))
+                @if (Auth::guard('admin')->check())
+                    @include('partials.header.header-admin')
+                @elseif (Auth::check())
+                    @if (Auth::user()->attendances()->whereNull('end_time')->exists())
+                        @include('partials.header.header-user')
+                    @else
+                        @include('partials.header.header-user-checkedout')
+                    @endif
+                @endif
+            @endif
         </header>
 
-        {{--  メインコンテンツ  --}}
+        {{-- メインコンテンツ --}}
         <main class="content">
             @yield('content')
         </main>

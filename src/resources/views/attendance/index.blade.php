@@ -4,27 +4,6 @@
 <link rel="stylesheet" href="{{ asset('css/attendance/index.css') }}">
 @endsection
 
-@section('link')
-{{-- ヘッダーリンク --}}
-<div class="header__links">
-    @if(session('clock_out_completed'))
-        <a class="header__link" href="{{ route('attendance.list') }}">今月の勤怠一覧</a>
-        <a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請一覧</a>
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <input class="header__link" type="submit" value="ログアウト">
-        </form>
-    @else
-        <a class="header__link" href="{{ route('attendance.index') }}">勤怠</a>
-        <a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a>
-        <a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a>
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <input class="header__link" type="submit" value="ログアウト">
-        </form>
-    @endif
-@endsection
-
 @section('content')
 <div class="attendance">
 

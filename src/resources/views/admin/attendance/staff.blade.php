@@ -4,19 +4,6 @@
 <link rel="stylesheet" href="{{ asset('css/admin/attendance/staff.css')}}">
 @endsection
 
-@section('link')
-{{-- ヘッダーリンク --}}
-<div class="header__links">
-    <a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a>
-    <a class="header__link" href="{{ route('admin.staff.list') }}">スタッフ一覧</a>
-    <a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請一覧</a>
-    <form action="{{ route('admin.logout') }}" method="POST">
-        @csrf
-        <input class="header__link" type="submit" value="ログアウト">
-    </form>
-</div>
-@endsection
-
 @section('content')
 <div class="attendance-staff">
     <h2 class="attendance-staff__heading">{{ $staff->name }}さんの勤怠</h2>

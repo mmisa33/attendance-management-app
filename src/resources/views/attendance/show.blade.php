@@ -4,33 +4,6 @@
 <link rel="stylesheet" href="{{ asset('css/attendance/show.css') }}">
 @endsection
 
-@section('link')
-{{-- ヘッダーリンク --}}
-<div class="header__links">
-    {{-- 管理者用 --}}
-    @auth('admin')
-        <a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a>
-        <a class="header__link" href="{{ route('admin.staff.list') }}">スタッフ一覧</a>
-        <a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請一覧</a>
-        <form action="{{ route('admin.logout') }}" method="POST">
-            @csrf
-            <input class="header__link" type="submit" value="ログアウト">
-        </form>
-    @endauth
-
-    {{-- 一般ユーザー用 --}}
-    @auth('web')
-        <a class="header__link" href="{{ route('attendance.index') }}">勤怠</a>
-        <a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a>
-        <a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a>
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <input class="header__link" type="submit" value="ログアウト">
-        </form>
-    @endauth
-</div>
-@endsection
-
 @section('content')
 <div class="attendance-detail">
     <h2 class="attendance-detail__heading">勤怠詳細</h2>
