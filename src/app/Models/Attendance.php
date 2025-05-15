@@ -10,17 +10,24 @@ class Attendance extends Model
 {
     use HasFactory;
 
-    // ステータス定数定義
+    /* =========================
+        定数定義
+    ========================= */
     const STATUS_OFF = '勤務外';
     const STATUS_WORKING = '出勤中';
     const STATUS_BREAK = '休憩中';
     const STATUS_DONE = '退勤済';
 
-    // 定数定義
+    /* =========================
+    時間関連の定数
+    ========================= */
     const MINUTES_IN_HOUR = 60;
     const MIN_WORK_TIME = 0;
     const DEFAULT_WORK_TIME = '0:00';
 
+    /* =========================
+        リレーション定義
+    ========================= */
     protected $fillable = [
         'user_id',
         'date',
@@ -42,50 +49,60 @@ class Attendance extends Model
         return $this->hasMany(BreakTime::class);
     }
 
-    // 日付の「MM/DD(曜日)」フォーマット
+    /* =========================
+        アクセサ定義
+    ========================= */
+    /* ----- 日付関連のフォーマット ----- */
+    // 「MM/DD(曜日)」形式で日付をフォーマット
     public function getFormattedDateAttribute()
     {
         $date = Carbon::parse($this->date);
         return $date->locale('ja')->format('m/d') . '(' . $date->isoFormat('ddd') . ')';
     }
 
-    // 日付の「YYYY年」フォーマット
+    // 「YYYY年」形式で日付をフォーマット
     public function getFormattedYearAttribute()
     {
         return Carbon::parse($this->date)->format('Y') . '年';
     }
 
-    // 日付の「n月j日」フォーマット
+    // 「n月j日」形式で日付をフォーマット
     public function getFormattedMonthdayAttribute()
     {
         return Carbon::parse($this->date)->format('n') . '月' . Carbon::parse($this->date)->format('j') . '日';
     }
 
-    // 日付の「YYYY/MM/DD」フォーマット
+    // 「YYYY/MM/DD」形式で日付をフォーマット
     public function getFormattedFullDateAttribute()
     {
         return Carbon::parse($this->date)->format('Y/m/d');
     }
 
-    // 修正申請日時の「YYYY/MM/DD」フォーマット
+    /* ----- 修正申請日時のフォーマット ----- */
+    // 「YYYY/MM/DD」形式で修正申請日時をフォーマット
     public function getFormattedRequestDateAttribute()
     {
         return Carbon::parse($this->request_date)->format('Y/m/d');
     }
 
-    // 開始時間のフォーマット
+    /* =========================
+        ビジネスロジック
+    ========================= */
+    /* ----- 出退勤時間のフォーマット ----- */
+    // 「HH:mm」形式で出勤時間をフォーマット
     public function getFormattedStartTimeAttribute()
     {
         return $this->start_time ? Carbon::parse($this->start_time)->format('H:i') : '';
     }
 
-    // 終了時間のフォーマット
+    // 「HH:mm」形式で退勤時間をフォーマット
     public function getFormattedEndTimeAttribute()
     {
         return $this->end_time ? Carbon::parse($this->end_time)->format('H:i') : '';
     }
 
-    // 休憩データの整形
+    /* ----- 休憩時間の整形・集計 ----- */
+    // 休憩時間を「HH:mm」形式で整形
     public function getFormattedBreakRowsAttribute()
     {
         $breakTimes = $this->breakTimes;
@@ -105,7 +122,7 @@ class Attendance extends Model
         return $breakRows;
     }
 
-    // 休憩時間の合計をフォーマット
+    // 退勤後のみ休憩時間の合計を「時間:分」形式で表示
     public function getTotalBreakTimeAttribute()
     {
         if ($this->status !== self::STATUS_DONE) {
@@ -120,17 +137,19 @@ class Attendance extends Model
         return sprintf("%d:%02d", $hours, $minutes);
     }
 
-    // 労働時間の合計をフォーマット
+    /* ----- 労働時間の計算 ----- */
+    // 退勤後のみ、休憩時間を差し引いた労働時間の合計を「時間:分」形式で表示
     public function getTotalHoursAttribute()
     {
         if ($this->status !== self::STATUS_DONE || !$this->start_time || !$this->end_time) {
-            return ''; // 退勤していない場合や出勤・退勤時間が未設定の場合は空白にする
+            return ''; // 退勤していない場合は空白にする
         }
 
         return $this->getFormattedWorkTime($this->start_time, $this->end_time, $this->breakTimes);
     }
 
-    // 休憩時間の合計を計算
+    /* ----- 内部処理 ----- */
+    // 休憩時間の合計（分単位）を計算
     private function calculateTotalBreakTime($breakTimes)
     {
         return $breakTimes->reduce(function ($carry, $breakTime) {
@@ -142,7 +161,7 @@ class Attendance extends Model
         }, 0);
     }
 
-    // 労働時間の合計を計算
+    // 出勤時間から退勤時間までの差分から休憩時間を差し引き、労働時間を「時間:分」形式で表示
     private function getFormattedWorkTime($startTime, $endTime, $breakTimes)
     {
         if ($this->status !== self::STATUS_DONE || !$startTime || !$endTime) {
@@ -153,8 +172,6 @@ class Attendance extends Model
         $end = Carbon::parse($endTime);
 
         $totalMinutes = $start->diffInMinutes($end);
-
-        // 休憩時間の分を減算
         $totalBreakMinutes = $this->calculateTotalBreakTime($breakTimes);
 
         $totalMinutes -= $totalBreakMinutes;
@@ -169,53 +186,9 @@ class Attendance extends Model
         return sprintf("%d:%02d", $hours, $minutes);
     }
 
-    public function updateAttendance($validated, $isAdmin = false)
-    {
-        // 既存の開始時間、終了時間、備考を更新
-        $this->start_time = $this->date . ' ' . $validated['start_time'] . ':00';
-        $this->end_time = $this->date . ' ' . $validated['end_time'] . ':00';
-        $this->note = $validated['note'];
-
-        // 管理者が修正している場合は、修正申請状態を解除
-        if ($isAdmin) {
-            $this->is_modified = false;
-        } else {
-            // 一般ユーザーの場合は、修正申請中の状態に変更
-            $this->is_modified = true;
-        }
-
-        // 勤怠情報を保存
-        $this->save();
-
-        // 既存の休憩時間を更新
-        foreach ($this->breakTimes as $i => $breakTime) {
-            $startInput = $validated['break_start'][$i] ?? null;
-            $endInput = $validated['break_end'][$i] ?? null;
-
-            if ($startInput && $endInput) {
-                $breakTime->break_start = $this->date . ' ' . $startInput . ':00';
-                $breakTime->break_end = $this->date . ' ' . $endInput . ':00';
-                $breakTime->save();
-            }
-        }
-
-        // 新規休憩時間を追加
-        $existingCount = count($this->breakTimes);
-        $additionalStarts = array_slice($validated['break_start'], $existingCount);
-        $additionalEnds = array_slice($validated['break_end'], $existingCount);
-
-        foreach ($additionalStarts as $i => $start) {
-            $end = $additionalEnds[$i] ?? null;
-
-            if ($start && $end) {
-                $this->breakTimes()->create([
-                    'break_start' => $this->date . ' ' . $start . ':00',
-                    'break_end' => $this->date . ' ' . $end . ':00',
-                ]);
-            }
-        }
-    }
-
+    /* =========================
+        スコープ定義
+    ========================= */
     // ユーザー指定のスコープ
     public function scopeOfUser($query, $userId)
     {
@@ -244,6 +217,58 @@ class Attendance extends Model
             ->ofMonth($month);
     }
 
+    /* =========================
+        更新処理
+    ========================= */
+    public function updateAttendance($validated, $isAdmin = false)
+    {
+        // 出勤・退勤時間、備考の更新
+        $this->start_time = $this->date . ' ' . $validated['start_time'] . ':00';
+        $this->end_time = $this->date . ' ' . $validated['end_time'] . ':00';
+        $this->note = $validated['note'];
+
+        // 管理者が修正している場合は、修正申請状態を解除
+        if ($isAdmin) {
+            $this->is_modified = false;
+        } else {
+            // 一般ユーザーの場合は、修正申請中の状態に変更
+            $this->is_modified = true;
+        }
+
+        $this->save();
+
+        // 休憩時間の更新・追加
+        foreach ($this->breakTimes as $i => $breakTime) {
+            $startInput = $validated['break_start'][$i] ?? null;
+            $endInput = $validated['break_end'][$i] ?? null;
+
+            if ($startInput && $endInput) {
+                $breakTime->break_start = $this->date . ' ' . $startInput . ':00';
+                $breakTime->break_end = $this->date . ' ' . $endInput . ':00';
+                $breakTime->save();
+            }
+        }
+
+        // 新規休憩時間を追加
+        $existingCount = count($this->breakTimes);
+        $additionalStarts = array_slice($validated['break_start'], $existingCount);
+        $additionalEnds = array_slice($validated['break_end'], $existingCount);
+
+        foreach ($additionalStarts as $i => $start) {
+            $end = $additionalEnds[$i] ?? null;
+
+            if ($start && $end) {
+                $this->breakTimes()->create([
+                    'break_start' => $this->date . ' ' . $start . ':00',
+                    'break_end' => $this->date . ' ' . $end . ':00',
+                ]);
+            }
+        }
+    }
+
+    /* =========================
+        CSVエクスポート
+    ========================= */
     // CSVエクスポート用データ生成
     public function toCsvRow()
     {
