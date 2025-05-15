@@ -96,6 +96,9 @@ body {
 /* 下部ボタン */
 .attendance-detail__btn,
 .attendance-detail__status--approved {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 130px;
     height: 50px;
     margin-top: 110px;
@@ -104,6 +107,7 @@ body {
     font-weight: bold;
     font-size: 22px;
     color: #FFFFFF;
+
 }
 
 .attendance-detail__status--approved {
@@ -159,5 +163,14 @@ body {
 
     .content__textarea {
         width: 80%;
+    }
+
+    .attendance-detail__alert-message {
+        text-align: center;
+    }
+
+    .attendance-detail__status--approved,
+    .attendance-detail__btn {
+        margin: 110px auto 0;
     }
 }

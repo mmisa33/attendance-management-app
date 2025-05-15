@@ -71,8 +71,8 @@ body {
 }
 
 /* 承認ボタン */
-.approval-detail__button,
-.approval-detail__approved-label {
+.approval-detail__btn,
+.attendance-detail__status--approved {
     width: 130px;
     height: 50px;
     margin-top: 110px;
@@ -83,11 +83,11 @@ body {
     color: #FFFFFF;
 }
 
-.approval-detail__button {
+.approval-detail__btn {
     background-color: #000000;
 }
 
-.approval-detail__approved-label {
+.attendance-detail__status--approved {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -110,5 +110,10 @@ body {
 
     .content__time-separator {
         width: 25%;
+    }
+
+    .approval-detail__btn,
+    .attendance-detail__status--approved {
+        margin: 110px auto 0;
     }
 }

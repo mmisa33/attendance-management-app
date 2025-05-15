@@ -22,10 +22,7 @@
     <h2 class="approval-detail__heading">勤怠詳細</h2>
 
     {{-- 勤怠承認フォーム --}}
-    <form class="approval-detail__form" method="POST"
-        action="{{ route('admin.stamp_correction_request.approve', ['id' => $attendance->id]) }}" novalidate>
-        @csrf
-
+    <div class="approval-detail__form">
         <table class="approval-detail__table">
             {{-- 名前 --}}
             <tr class="approval-detail__row">
@@ -48,9 +45,9 @@
             <tr class="approval-detail__row">
                 <th class="approval-detail__header">出勤・退勤</th>
                 <td class="approval-detail__content approval-detail__content--time">
-                    {{ substr($attendance->start_time, 11, 5) }}
+                    {{ $attendance->formatted_start_time }}
                     <span class="content__time-separator">～</span>
-                    {{ substr($attendance->end_time, 11, 5) }}
+                    {{ $attendance->formatted_end_time }}
                 </td>
             </tr>
 
@@ -58,21 +55,26 @@
             @foreach ($breakRows as $breakRow)
                 <tr class="approval-detail__row">
                     <th class="approval-detail__header">
-                        @if ($breakRow['index'] == 0)
-                            休憩
-                        @else
-                            休憩{{ $breakRow['index'] + 1 }}
-                        @endif
+                        休憩{{ $breakRow['index'] == 0 ? '' : $breakRow['index'] + 1 }}
                     </th>
                     <td class="approval-detail__content approval-detail__content--time">
                         {{ $breakRow['start'] }}
-                        @if ($breakRow['start'] && $breakRow['end'])
-                            <span class="content__time-separator">～</span>
-                        @endif
+                        <span class="content__time-separator">～</span>
                         {{ $breakRow['end'] }}
                     </td>
                 </tr>
             @endforeach
+
+            {{-- 休憩開始が一度でも押された場合に、空の休憩行を追加 --}}
+            @if (collect($breakRows)->contains(fn($breakRow) => !empty($breakRow['start'])))
+                <tr class="approval-detail__row">
+                    <th class="approval-detail__header">
+                        休憩{{ count($breakRows) + 1 }}
+                    </th>
+                    <td class="approval-detail__content approval-detail__content--time">
+                    </td>
+                </tr>
+            @endif
 
             {{-- 備考 --}}
             <tr class="approval-detail__row">
@@ -82,16 +84,16 @@
                 </td>
             </tr>
         </table>
+    </div>
 
-        {{-- 承認ボタンまたは承認済みラベル --}}
-        @if (!$attendance->is_approved)
-            <form id="approval-form" action="{{ route('admin.stamp_correction_request.approve', ['id' => $attendance->id]) }}" method="POST">
-                @csrf
-                <button type="submit" class="approval-detail__button">承認</button>
-            </form>
-        @else
-            <p class="approval-detail__approved-label">承認済み</p>
-        @endif
-    </form>
+    {{-- 承認ボタンまたは承認済みラベル --}}
+    @if (!$attendance->is_approved)
+        <form id="approval-form" action="{{ route('admin.stamp_correction_request.approve', ['attendance_correction_request' => $attendance->id]) }}" method="POST">
+            @csrf
+            <button type="submit" class="approval-detail__btn">承認</button>
+        </form>
+    @else
+        <p class="attendance-detail__status--approved">承認済み</p>
+    @endif
 </div>
 @endsection

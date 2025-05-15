@@ -66,7 +66,7 @@
                             <td class="request-list__content">{{ $request->formatted_request_date }}</td>
                             <td class="request-list__content">
                                 @if(auth()->guard('admin')->check())
-                                    <a href="{{ route('admin.stamp_correction_request.show', ['id' => $request->id]) }}" class="content__detail">詳細</a>
+                                    <a href="{{ route('admin.stamp_correction_request.show', ['attendance_correction_request' => $request->id]) }}" class="content__detail">詳細</a>
                                 @else
                                     <a href="{{ route('attendance.show', ['id' => $request->id]) }}" class="content__detail">詳細</a>
                                 @endif
@@ -104,7 +104,7 @@
                             <td class="request-list__content">{{ $request->formatted_request_date }}</td>
                             <td class="request-list__content">
                                 @if(auth()->guard('admin')->check())
-                                    <a href="{{ route('admin.stamp_correction_request.show', ['id' => $request->id]) }}" class="content__detail">詳細</a>
+                                    <a href="{{ route('admin.stamp_correction_request.show', ['attendance_correction_request' => $request->id]) }}" class="content__detail">詳細</a>
                                 @else
                                     <a href="{{ route('attendance.show', ['id' => $request->id]) }}" class="content__detail">詳細</a>
                                 @endif

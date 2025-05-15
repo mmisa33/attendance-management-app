@@ -48,8 +48,8 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/staff/list', [StaffController::class, 'index'])->name('admin.staff.list');
     Route::get('/attendance/staff/{id}', [AdminAttendanceController::class, 'showStaffAttendance'])->name('admin.attendance.staff');
     Route::get('/attendance/staff/{id}/csv', [AdminAttendanceController::class, 'exportStaffAttendanceCsv'])->name('admin.attendance.staff.csv');
-    Route::get('/stamp_correction_request/approve/{id}', [AdminStampCorrectionRequestController::class, 'show'])->name('admin.stamp_correction_request.show');
-    Route::post('/stamp_correction_request/approve/{id}', [AdminStampCorrectionRequestController::class, 'approve'])->name('admin.stamp_correction_request.approve');
+    Route::get('/stamp_correction_request/approve/{attendance_correction_request}', [AdminStampCorrectionRequestController::class, 'show'])->name('admin.stamp_correction_request.show');
+    Route::post('/stamp_correction_request/approve/{attendance_correction_request}', [AdminStampCorrectionRequestController::class, 'approve'])->name('admin.stamp_correction_request.approve');
 });
 
 // 一般ユーザーと管理者の両方がアクセス可能なページ
