@@ -15,7 +15,8 @@
     <div class="app">
         {{-- ヘッダー --}}
         <header class="header
-            @if(Request::is('login') || Request::is('admin/login') || Request::is('email/verify'))
+            @if (
+                Request::is('login') ||Request::is('admin/login') ||(Request::is('email/verify*') && !Auth::user()->hasVerifiedEmail()))
                 header--logo-only
             @endif
         ">
@@ -23,22 +24,23 @@
                 <img src="{{ asset('images/logo.svg') }}" alt="coachtech 勤怠管理アプリ">
             </div>
 
-            {{-- ヘッダー切り替え --}}
-            @if (Auth::guard('admin')->check())
-                @include('partials.header.header-admin')
-            @elseif (Auth::check())
-                @php
-                    $todayAttendance = Auth::user()->attendances()
-                        ->whereDate('date', now()->toDateString())
-                        ->first();
-                @endphp
+            {{-- ロゴのみの場合はヘッダーの中身を表示しない --}}
+            @if (!Request::is('email/verify*'))
+                {{-- ヘッダー切り替え --}}
+                @if (Auth::guard('admin')->check())
+                    @include('partials.header.header-admin')
+                @elseif (Auth::check())
+                    @php
+                        $todayAttendance = Auth::user()->attendances()
+                            ->whereDate('date', now()->toDateString())
+                            ->first();
+                    @endphp
 
-                @if ($todayAttendance && $todayAttendance->status === \App\Models\Attendance::STATUS_DONE)
-                    {{-- 退勤済だけ専用ヘッダー --}}
-                    @include('partials.header.header-user-checkedout')
-                @else
-                    {{-- 退勤済以外は通常ヘッダー --}}
-                    @include('partials.header.header-user')
+                    @if ($todayAttendance && $todayAttendance->status === \App\Models\Attendance::STATUS_DONE)
+                        @include('partials.header.header-user-checkedout')
+                    @else
+                        @include('partials.header.header-user')
+                    @endif
                 @endif
             @endif
         </header>
