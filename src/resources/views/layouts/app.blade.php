@@ -13,6 +13,7 @@
 
 <body>
     <div class="app">
+        {{-- ヘッダー --}}
         <header class="header
             @if(Request::is('login') || Request::is('admin/login') || Request::is('email/verify'))
                 header--logo-only
@@ -22,15 +23,22 @@
                 <img src="{{ asset('images/logo.svg') }}" alt="coachtech 勤怠管理アプリ">
             </div>
 
-            @if (!Request::is('login') && !Request::is('admin/login') && !Request::is('password/*'))
-                @if (Auth::guard('admin')->check())
-                    @include('partials.header.header-admin')
-                @elseif (Auth::check())
-                    @if (Auth::user()->attendances()->whereNull('end_time')->exists())
-                        @include('partials.header.header-user')
-                    @else
-                        @include('partials.header.header-user-checkedout')
-                    @endif
+            {{-- ヘッダー切り替え --}}
+            @if (Auth::guard('admin')->check())
+                @include('partials.header.header-admin')
+            @elseif (Auth::check())
+                @php
+                    $todayAttendance = Auth::user()->attendances()
+                        ->whereDate('date', now()->toDateString())
+                        ->first();
+                @endphp
+
+                @if ($todayAttendance && $todayAttendance->status === \App\Models\Attendance::STATUS_DONE)
+                    {{-- 退勤済だけ専用ヘッダー --}}
+                    @include('partials.header.header-user-checkedout')
+                @else
+                    {{-- 退勤済以外は通常ヘッダー --}}
+                    @include('partials.header.header-user')
                 @endif
             @endif
         </header>

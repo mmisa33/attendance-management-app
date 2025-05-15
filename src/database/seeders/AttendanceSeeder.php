@@ -18,45 +18,81 @@ class AttendanceSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
-            'name' => 'テストユーザー',
-            'email' => 'user@example.com',
-            'password' => Hash::make('password123'),
-            'is_admin' => false,
-        ]);
-
-        // 2025年4月の10日分の出勤データを作成
-        foreach (range(1, 10) as $i) {
-            // ランダムな出勤時刻と退勤時刻を生成
-            $start_time = Carbon::create(2025, 4, $i, rand(8, 10), rand(0, 59), 0);
-            $end_time = $start_time->copy()->addHours(rand(7, 9));  // 出勤から7～9時間後の退勤時刻
-
-            // 勤怠データを挿入
-            $attendance = Attendance::create([
-                'user_id' => 1,
-                'date' => $start_time->toDateString(),
-                'status' => '退勤済',
-                'start_time' => $start_time,
-                'end_time' => $end_time,
-                'is_modified' => false,
-                'is_approved' => false,
+        // 3名のユーザーを作成
+        $users = [];
+        for ($i = 1; $i <= 3; $i++) {
+            $users[] = User::create([
+                'name' => 'テストユーザー' . $i,
+                'email' => 'user' . $i . '@example.com',
+                'password' => Hash::make('password123'),
+                'is_admin' => false,
+                'email_verified_at' => Carbon::now(),
             ]);
+        }
 
-            // 複数の休憩時間を追加
-            foreach (range(1, rand(1, 3)) as $j) {
-                $break_start = $start_time->copy()->addHours(rand(1, 3))->addMinutes(rand(0, 30));
-                $break_end = $break_start->copy()->addMinutes(rand(30, 60)); // 休憩後30～60分で終了
+        // 5月の1日～10日分の出勤データを生成
+        foreach ($users as $user) {
+            foreach (range(1, 10) as $day) {
+                $start_time = Carbon::create(2025, 5, $day, rand(8, 10), rand(0, 59), 0);
+                $end_time = $start_time->copy()->addHours(rand(7, 9));
 
-                // 休憩終了が勤務終了を超えていたら調整
-                if ($break_end > $end_time) {
-                    $break_end = $end_time->copy()->subMinutes(rand(5, 15));
-                }
+                // **今日のデータは「勤務外」、過去の日付は「退勤済」**
+                $status = ($start_time->isToday()) ? '勤務外' : '退勤済';
 
-                BreakTime::create([
-                    'attendance_id' => $attendance->id,
-                    'break_start' => $break_start,
-                    'break_end' => $break_end,
+                $attendance = Attendance::create([
+                    'user_id' => $user->id,
+                    'date' => $start_time->toDateString(),
+                    'status' => $status,
+                    'start_time' => $status === '退勤済' ? $start_time : null,
+                    'end_time' => $status === '退勤済' ? $end_time : null,
+                    'is_modified' => false,
+                    'is_approved' => false,
                 ]);
+
+                if ($status === '退勤済') {
+                    $existingBreaks = [];
+
+                    // 複数の休憩時間を追加（重複しないように調整）
+                    foreach (range(1, rand(1, 3)) as $j) {
+                        $maxAttempts = 10; // 無限ループ防止
+                        $attempts = 0;
+
+                        do {
+                            $attempts++;
+                            $break_start = $start_time->copy()->addHours(rand(1, 3))->addMinutes(rand(0, 30));
+                            $break_end = $break_start->copy()->addMinutes(rand(30, 60));
+
+                            if ($break_end > $end_time) {
+                                $break_end = $end_time->copy()->subMinutes(rand(5, 15));
+                            }
+
+                            $overlap = false;
+                            foreach ($existingBreaks as $existing) {
+                                if (
+                                    ($break_start < $existing['end'] && $break_end > $existing['start'])
+                                ) {
+                                    $overlap = true;
+                                    break;
+                                }
+                            }
+                        } while ($overlap && $attempts < $maxAttempts);
+
+                        if ($attempts >= $maxAttempts) {
+                            continue;
+                        }
+
+                        $existingBreaks[] = [
+                            'start' => $break_start,
+                            'end' => $break_end,
+                        ];
+
+                        BreakTime::create([
+                            'attendance_id' => $attendance->id,
+                            'break_start' => $break_start,
+                            'break_end' => $break_end,
+                        ]);
+                    }
+                }
             }
         }
     }
