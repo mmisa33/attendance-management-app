@@ -29,8 +29,14 @@ class AuthenticatedSessionController extends Controller
         // ログイン試行
         if (Auth::guard($guard)->attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            $route = $guard === 'admin' ? 'admin.attendance.list' : 'attendance.index';
-            return redirect()->route($route);
+
+            // 管理者ログインの場合、固定でリダイレクト
+            if ($guard === 'admin') {
+                return redirect()->route('admin.attendance.list');
+            }
+
+            // 一般ユーザーの場合
+            return redirect()->route('attendance.index');
         }
 
         return back()
