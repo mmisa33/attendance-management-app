@@ -72,12 +72,28 @@ class AttendanceDetailRequest extends FormRequest
             $breakStarts = $this->input('break_start', []);
             $breakEnds = $this->input('break_end', []);
 
+            // 出勤中であるか確認
+            $this->validateIfNotInWork($validator);
+
             // 出勤・退勤時間の前後確認
             $this->validateStartEndTime($validator, $startTime, $endTime);
 
             // 休憩時間の勤務時間内確認と重複確認
             $this->validateBreakTimes($validator, $startTime, $endTime, $breakStarts, $breakEnds);
         });
+    }
+
+    // 出勤中であればエラー
+    private function validateIfNotInWork($validator)
+    {
+        $userId = auth()->id();
+        $isInWork = \App\Models\Attendance::where('user_id', $userId)
+            ->whereNull('end_time')
+            ->exists();
+
+        if ($isInWork) {
+            $validator->errors()->add('start_time', '出勤中は修正できません');
+        }
     }
 
     // 出勤・退勤時間の前後関係確認

@@ -15,28 +15,27 @@ class AuthenticatedSessionController extends Controller
     public function create(Request $request)
     {
         return $request->is('admin/*')
-            ? view('admin.auth.login')    // 管理者用ログインページ
-            : view('auth.login');         // 一般ユーザー用ログインページ
+            ? view('admin.auth.login') // 管理者用ログインページ
+            : view('auth.login'); // 一般ユーザー用ログインページ
     }
 
     // ログイン処理
     public function store(LoginRequest $request)
     {
+        // 管理者か一般ユーザーか判定
         $guard = $request->is('admin/*') ? 'admin' : 'web';
         $credentials = $request->only('email', 'password');
 
+        // ログイン試行
         if (Auth::guard($guard)->attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-
-            // ログイン後のリダイレクト処理
-            return $guard === 'admin'
-                ? redirect()->route('admin.attendance.list') // 管理者用ページ
-                : redirect()->route('attendance.index'); // ユーザー用ページ
+            $route = $guard === 'admin' ? 'admin.attendance.list' : 'attendance.index';
+            return redirect()->route($route);
         }
 
-        return back()->withErrors([
-            'email' => 'ログイン情報が登録されていません',
-        ]);
+        return back()
+            ->withInput()
+            ->withErrors(['email' => 'ログイン情報が登録されていません']);
     }
 
     // ログアウト処理
@@ -62,17 +61,17 @@ class AuthenticatedSessionController extends Controller
     {
         $user = Auth::user();
 
-        // 管理者はメール認証を行わないのでスキップ
+        // 管理者はメール認証をスキップ
         if (Auth::guard('admin')->check()) {
             return redirect()->route('admin.attendance.list');
         }
 
-        // 一般ユーザーで、かつメール認証が完了している場合はリダイレクト
+        // 一般ユーザーかつメール認証が完了している場合はリダイレクト
         if ($user instanceof MustVerifyEmail && $user->hasVerifiedEmail()) {
             return redirect()->route('attendance.index');
         }
 
-        // 認証が完了していない場合、エラーメッセージを表示
+        // 認証が完了していない場合はエラーメッセージを表示
         return redirect()->route('verification.notice')
             ->with('error', 'メール認証が完了していません');
     }

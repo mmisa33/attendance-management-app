@@ -16,7 +16,7 @@
         {{-- ヘッダー --}}
         <header class="header
             @if (
-                Request::is('login') ||Request::is('admin/login') ||(Request::is('email/verify*') && !Auth::user()->hasVerifiedEmail()))
+                Request::is('login') ||Request::is('register') ||Request::is('admin/login') ||(Request::is('email/verify*') && !Auth::user()->hasVerifiedEmail()))
                 header--logo-only
             @endif
         ">
