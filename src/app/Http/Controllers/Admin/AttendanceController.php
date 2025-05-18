@@ -20,11 +20,17 @@ class AttendanceController extends Controller
             ->orderBy('user_id')
             ->get();
 
+        $formattedCurrentDate = $date->format('Y年n月j日');
+        $formattedDate = $date->format('Y/m/d');
+        $previousDate = $date->copy()->subDay()->format('Y-m-d');
+        $nextDate = $date->copy()->addDay()->format('Y-m-d');
+
         return view('admin.attendance.list', [
+            'formattedCurrentDate' => $formattedCurrentDate,
             'attendances' => $attendances,
-            'currentDate' => $date,
-            'previousDate' => $date->copy()->subDay(),
-            'nextDate' => $date->copy()->addDay(),
+            'formattedDate' => $formattedDate,
+            'previousDate' => $previousDate,
+            'nextDate' => $nextDate,
         ]);
     }
 

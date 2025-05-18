@@ -7,17 +7,17 @@
 @section('content')
 <div class="admin-attendance-list">
     {{-- ページタイトル --}}
-    <h2 class="admin-attendance-list__heading">{{ $currentDate->format('Y年n月j日の勤怠') }}</h2>
+    <h2 class="admin-attendance-list__heading">{{ $formattedCurrentDate }}の勤怠</h2>
 
     {{-- ナビ --}}
     <div class="admin-attendance-list__nav">
-        <a href="{{ route('admin.attendance.list', ['date' => $previousDate->format('Y-m-d')]) }}" class="nav__btn">
+        <a href="{{ route('admin.attendance.list', ['date' => $previousDate]) }}" class="nav__btn">
             <img src="{{ asset('images/icon/arrow-left.png') }}" alt="前日へ戻る">前日
         </a>
         <h3 class="nav__month">
-            <img src="{{ asset('images/icon/calender.png') }}" alt="カレンダー">{{ $currentDate->format('Y年m月d日') }}
+            <img src="{{ asset('images/icon/calender.png') }}" alt="カレンダー">{{ $formattedDate }}
         </h3>
-        <a href="{{ route('admin.attendance.list', ['date' => $nextDate->format('Y-m-d')]) }}" class="nav__btn">
+        <a href="{{ route('admin.attendance.list', ['date' => $nextDate]) }}" class="nav__btn">
             翌日<img src="{{ asset('images/icon/arrow-right.png') }}" alt="翌日へ進む">
         </a>
     </div>
