@@ -142,7 +142,7 @@ body {
 /* レスポンシブデザイン (タブレット768px - 850px) */
 @media screen and (min-width: 768px) and (max-width: 850px) {
     .attendance-detail {
-        width: 90vw;
+        width: 95vw;
     }
 
     .attendance-detail__form {

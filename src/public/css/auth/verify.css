@@ -27,3 +27,11 @@
     font-size: 20px;
     color: #0073CC;
 }
+
+/* レスポンシブデザイン (タブレット768px - 850px) */
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .email-verification {
+        margin: 0 auto;
+        width: 80vw;
+    }
+}

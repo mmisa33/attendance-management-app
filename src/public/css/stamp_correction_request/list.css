@@ -47,7 +47,6 @@ body {
     font-weight: bold;
     font-size: 16px;
     color: #737373;
-    table-layout: fixed;
 }
 
 .request-list__header {
@@ -71,10 +70,25 @@ body {
 /* レスポンシブデザイン (タブレット768px - 850px) */
 @media screen and (min-width: 768px) and (max-width: 850px) {
     .request-list {
-        width: 90vw;
+        width: 95vw;
     }
 
     .request-list__tab {
         justify-content: center;
+    }
+
+    .request-list__table {
+        table-layout: fixed;
+    }
+
+    .request-list__header {
+        padding: 10px 3px;
+    }
+
+    .request-list__content {
+        padding: 10px 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }

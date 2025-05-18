@@ -97,7 +97,7 @@ body {
 /* レスポンシブデザイン (タブレット768px - 850px) */
 @media screen and (min-width: 768px) and (max-width: 850px) {
     .approval-detail {
-        width: 90vw;
+        width: 95vw;
     }
 
     .approval-detail__form {

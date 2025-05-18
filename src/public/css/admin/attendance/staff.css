@@ -69,7 +69,7 @@ body {
     font-weight: bold;
     font-size: 16px;
     color: #737373;
-    table-layout: fixed;
+
 }
 
 .attendance-staff__header {
@@ -109,6 +109,17 @@ body {
 /* レスポンシブデザイン (タブレット768px - 850px) */
 @media screen and (min-width: 768px) and (max-width: 850px) {
     .attendance-staff {
-        width: 90vw;
+        width: 95vw;
+    }
+    .attendance-staff__header {
+        padding: 10px 15px;
+    }
+
+    .attendance-staff__content {
+        padding: 10px 15px;
+    }
+
+    .attendance-staff__csv {
+        margin: 70px auto 0;
     }
 }

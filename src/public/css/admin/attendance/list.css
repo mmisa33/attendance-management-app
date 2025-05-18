@@ -69,7 +69,6 @@ body {
     font-weight: bold;
     font-size: 16px;
     color: #737373;
-    table-layout: fixed;
 }
 
 .admin-attendance-list__header {
@@ -93,6 +92,19 @@ body {
 /* レスポンシブデザイン (タブレット768px - 850px) */
 @media screen and (min-width: 768px) and (max-width: 850px) {
     .admin-attendance-list {
-        width: 90vw;
+        width: 95vw;
+    }
+
+    .admin-attendance-list__header {
+        padding: 10px 15px;
+    }
+
+    .admin-attendance-list__content {
+        padding: 10px 15px;
+    }
+
+    .request-list__content {
+                display: inline-block;
+                    max-width: 100px
     }
 }
