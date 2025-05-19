@@ -13,7 +13,7 @@
     <table class="staff-list__table">
         <thead>
             <tr class="staff-list__row">
-                <th class="staff-list__header">氏名</th>
+                <th class="staff-list__header">名前</th>
                 <th class="staff-list__header">メールアドレス</th>
                 <th class="staff-list__header">月次勤怠</th>
             </tr>

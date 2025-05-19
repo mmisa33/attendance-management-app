@@ -29,7 +29,7 @@ class AttendanceDetailRequest extends FormRequest
             'end_time'      => ['required', 'date_format:H:i'],
             'break_start'   => ['array'],
             'break_end'     => ['array'],
-            'note'          => ['required'],
+            'note'          => ['required', 'max:50'],
             'break_start.*' => ['nullable', 'date_format:H:i'],
             'break_end.*'   => ['nullable', 'date_format:H:i'],
         ];
@@ -39,29 +39,10 @@ class AttendanceDetailRequest extends FormRequest
     {
         return [
             'start_time.required'   => '出勤時間を記入してください',
-            'start_time.date_format' => '出勤時間は「HH:MM」の形式で入力してください',
             'end_time.required'     => '退勤時間を記入してください',
-            'end_time.date_format'   => '退勤時間は「HH:MM」の形式で入力してください',
-            'break_start.*.date_format' => '休憩開始時間は「HH:MM」の形式で入力してください',
-            'break_end.*.date_format'   => '休憩終了時間は「HH:MM」の形式で入力してください',
             'note.required'         => '備考を記入してください',
+            'note.max'              => '備考は50文字以内で入力してください',
         ];
-    }
-
-    // バリデーション前に入力値を変換
-    public function prepareForValidation()
-    {
-        // 全角を半角に変換
-        $this->merge([
-            'start_time' => mb_convert_kana($this->start_time, 'a'),
-            'end_time'   => mb_convert_kana($this->end_time, 'a'),
-            'break_start' => array_map(function ($time) {
-                return mb_convert_kana($time, 'a');
-            }, $this->break_start),
-            'break_end'   => array_map(function ($time) {
-                return mb_convert_kana($time, 'a');
-            }, $this->break_end),
-        ]);
     }
 
     public function withValidator($validator)

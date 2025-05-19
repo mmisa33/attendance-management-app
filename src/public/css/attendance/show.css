@@ -70,6 +70,17 @@ body {
     width: 45%;
 }
 
+/* 時計のデフォルトを非表示（Chrome, Edge, Safari）*/
+input[type="time"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+
+/* 時計のデフォルトを非表示（Firefox）*/
+input[type="time"] {
+    -moz-appearance: textfield;
+}
+
 .attendance-detail__content--time input {
     display: inline-block;
     width: 19%;
@@ -126,7 +137,7 @@ body {
 }
 
 .attendance-detail__content--textarea.modified .content__textarea {
-    padding: 8px 35px;
+    padding: 10px 35px;
     height: 60px;
     line-height: 40px;
 }
@@ -154,7 +165,7 @@ body {
     }
 
     .content__year {
-        width: 60%;
+        width: 57%;
     }
 
     .content__time-separator {

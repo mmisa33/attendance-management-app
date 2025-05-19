@@ -59,13 +59,13 @@ body {
     }
 
     .staff-list__header {
-        padding: 10px 3px;
+        padding: 10px 15px;
     }
 
     .staff-list__content {
-        padding: 10px 3px;
+        padding: 10px 15px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-}
+    }
 }
