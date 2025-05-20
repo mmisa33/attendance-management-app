@@ -10,22 +10,23 @@ class AuthEither
 {
     public function handle(Request $request, Closure $next)
     {
-        // 管理者または一般ユーザーがログインしている場合
-        if (Auth::guard('admin')->check() || Auth::guard('web')->check()) {
-            // 管理者の場合、verifiedをスキップ
-            if (Auth::guard('admin')->check()) {
-                return $next($request);
-            }
+        if (Auth::guard('admin')->check()) {
+            Auth::shouldUse('admin');
+            return $next($request);
+        }
 
-            // 一般ユーザーの場合、メール認証のチェック
+        if (Auth::guard('web')->check()) {
             if (Auth::guard('web')->user()->hasVerifiedEmail()) {
+                Auth::shouldUse('web');
                 return $next($request);
             }
         }
 
-        // 未ログイン時、対象に応じたログインページへ
-        return $request->is('admin/*') || $request->routeIs('admin.*')
-            ? redirect()->route('admin.login')
-            : redirect()->route('verification.notice');
+        $lastGuard = session('last_auth_guard');
+        if ($lastGuard === 'admin') {
+            return redirect()->route('admin.login');
+        }
+
+        return redirect()->route('verification.notice');
     }
 }

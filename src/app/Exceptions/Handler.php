@@ -42,9 +42,12 @@ class Handler extends ExceptionHandler
 
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        if ($request->is('admin/*')) {
-            return redirect()->guest(route('admin.login'));
+        foreach ($exception->guards() as $guard) {
+            if ($guard === 'admin') {
+                return redirect()->guest(route('admin.login'));
+            }
         }
+
         return redirect()->guest(route('login'));
     }
 }
