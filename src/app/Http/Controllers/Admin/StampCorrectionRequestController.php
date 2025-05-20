@@ -7,6 +7,7 @@ use App\Models\Attendance;
 
 class StampCorrectionRequestController extends Controller
 {
+    // 修正申請承認ページを表示
     public function show($attendance_correction_request)
     {
         $attendance = Attendance::with(['user'])->findOrFail($attendance_correction_request);
@@ -17,6 +18,7 @@ class StampCorrectionRequestController extends Controller
         ]);
     }
 
+    // 承認処理
     public function approve($attendance_correction_request)
     {
         $attendance = Attendance::findOrFail($attendance_correction_request);

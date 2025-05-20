@@ -14,7 +14,7 @@
             {{-- 名前 --}}
             <tr class="approval-detail__row">
                 <th class="approval-detail__header">名前</th>
-                <td class="approval-detail__content">
+                <td class="approval-detail__content approval-detail__content--name">
                     {{ $attendance->user->name }}
                 </td>
             </tr>
@@ -32,9 +32,9 @@
             <tr class="approval-detail__row">
                 <th class="approval-detail__header">出勤・退勤</th>
                 <td class="approval-detail__content approval-detail__content--time">
-                    {{ $attendance->formatted_start_time }}
+                    <span class="content__time">{{ $attendance->formatted_start_time }}</span>
                     <span class="content__time-separator">～</span>
-                    {{ $attendance->formatted_end_time }}
+                    <span class="content__time">{{ $attendance->formatted_end_time }}</span>
                 </td>
             </tr>
 
@@ -45,9 +45,9 @@
                         休憩{{ $breakRow['index'] == 0 ? '' : $breakRow['index'] + 1 }}
                     </th>
                     <td class="approval-detail__content approval-detail__content--time">
-                        {{ $breakRow['start'] }}
+                        <span class="content__time">{{ $breakRow['start'] }}</span>
                         <span class="content__time-separator">～</span>
-                        {{ $breakRow['end'] }}
+                        <span class="content__time">{{ $breakRow['end'] }}</span>
                     </td>
                 </tr>
             @endforeach
@@ -66,8 +66,8 @@
             {{-- 備考 --}}
             <tr class="approval-detail__row">
                 <th class="approval-detail__header">備考</th>
-                <td class="approval-detail__content">
-                    {{ $attendance->note }}
+                <td class="approval-detail__content approval-detail__content--textarea">
+                    <span class="content__textarea">{{ $attendance->note }}</span>
                 </td>
             </tr>
         </table>
