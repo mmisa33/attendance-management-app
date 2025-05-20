@@ -16,34 +16,33 @@
         {{-- ヘッダー --}}
         <header class="header
             @if (
-                Request::is('login') ||Request::is('register') ||Request::is('admin/login') ||(Request::is('email/verify*') && !Auth::user()->hasVerifiedEmail()))
+                Request::is('login') ||
+                Request::is('register') ||
+                Request::is('admin/login') ||
+                Request::is('email/verify*') && Auth::check() && !Auth::user()->hasVerifiedEmail())
                 header--logo-only
             @endif
         ">
+            {{-- ロゴは常に表示 --}}
             <div class="header__logo">
                 <img src="{{ asset('images/logo.svg') }}" alt="coachtech 勤怠管理アプリ">
             </div>
 
-            {{-- ロゴのみの場合はヘッダーの中身を表示しない --}}
-            @if (!Request::is('email/verify*'))
-                {{-- ヘッダー切り替え --}}
-                @if (Auth::guard('admin')->check())
-                    @include('partials.header.header-admin')
-                @elseif (Auth::check())
-                    @php
-                        $todayAttendance = Auth::user()->attendances()
-                            ->whereDate('date', now()->toDateString())
-                            ->first();
-                    @endphp
-
-                    @if ($todayAttendance && $todayAttendance->status === \App\Models\Attendance::STATUS_DONE)
-                        @include('partials.header.header-user-checkedout')
-                    @else
-                        @include('partials.header.header-user')
-                    @endif
+            {{-- ログイン状態によってヘッダーの中身を切り替え --}}
+            @if (Auth::guard('admin')->check())
+                {{-- 管理者用ヘッダー --}}
+                @include('partials.header.header-admin')
+            @elseif (Auth::check())
+                @if ($todayAttendance && $todayAttendance->status === $attendanceStatuses['done'])
+                    {{-- 一般ユーザー用退勤時ヘッダー --}}
+                    @include('partials.header.header-user-checkedout')
+                @else
+                    {{-- 一般ユーザー用ヘッダー --}}
+                    @include('partials.header.header-user')
                 @endif
             @endif
         </header>
+
 
         {{-- メインコンテンツ --}}
         <main class="content">

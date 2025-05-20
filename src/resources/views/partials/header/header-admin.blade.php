@@ -1,3 +1,4 @@
+{{-- 管理者用ヘッダー --}}
 <nav class="header__links">
     <a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a>
     <a class="header__link" href="{{ route('admin.staff.list') }}">スタッフ一覧</a>

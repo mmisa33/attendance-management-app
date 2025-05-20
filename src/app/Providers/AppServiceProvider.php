@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        View::composer('layouts.app', function ($view) {
+            $user = Auth::user();
+            $attendanceStatuses = [
+                'done' => \App\Models\Attendance::STATUS_DONE,
+            ];
+
+            $todayAttendance = null;
+            if ($user instanceof \App\Models\User) {
+                $todayAttendance = $user->attendances()
+                    ->whereDate('date', now()->toDateString())
+                    ->first();
+            }
+
+            $view->with(compact('todayAttendance', 'attendanceStatuses'));
+        });
     }
 }

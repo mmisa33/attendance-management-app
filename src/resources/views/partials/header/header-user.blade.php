@@ -1,3 +1,4 @@
+{{-- 一般ユーザー用ヘッダー --}}
 <nav class="header__links">
     <a class="header__link" href="{{ route('attendance.index') }}">勤怠</a>
     <a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a>
