@@ -16,14 +16,14 @@ class CreateAttendancesTable extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete(); // 外部キー
-            $table->date('date'); // 日付
-            $table->string('status')->default('勤務外'); // 勤務ステータス
-            $table->timestamp('start_time')->nullable(); // 出勤時刻
-            $table->timestamp('end_time')->nullable(); // 退勤時刻
-            $table->text('note')->nullable(); // 備考（修正申請時のメモ）
-            $table->boolean('is_modified')->default(false); // 修正申請フラグ
-            $table->boolean('is_approved')->default(false); // 承認フラグ
-            $table->timestamp('request_date')->nullable(); // 修正申請日時
+            $table->date('date');                                           // 日付
+            $table->string('status')->default('勤務外');                    // 勤務ステータス
+            $table->timestamp('start_time')->nullable();                   // 出勤時刻
+            $table->timestamp('end_time')->nullable();                     // 退勤時刻
+            $table->text('note')->nullable();                              // 備考（修正申請時のメモ）
+            $table->boolean('is_modified')->default(false);                // 修正申請フラグ
+            $table->boolean('is_approved')->default(false);                // 承認フラグ
+            $table->timestamp('request_date')->nullable();                 // 修正申請日時
             $table->timestamps();
         });
     }

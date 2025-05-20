@@ -28,17 +28,19 @@
                 <img src="{{ asset('images/logo.svg') }}" alt="coachtech 勤怠管理アプリ">
             </div>
 
-            {{-- ログイン状態によってヘッダーの中身を切り替え --}}
-            @if (Auth::guard('admin')->check())
-                {{-- 管理者用ヘッダー --}}
-                @include('partials.header.header-admin')
-            @elseif (Auth::check())
-                @if ($todayAttendance && $todayAttendance->status === $attendanceStatuses['done'])
-                    {{-- 一般ユーザー用退勤時ヘッダー --}}
-                    @include('partials.header.header-user-checkedout')
-                @else
-                    {{-- 一般ユーザー用ヘッダー --}}
-                    @include('partials.header.header-user')
+            {{-- ログイン状態によってヘッダー内容を切り替え --}}
+            @if (!Request::is('email/verify*'))
+                @if (Auth::guard('admin')->check())
+                    {{-- 管理者用ヘッダー --}}
+                    @include('partials.header.header-admin')
+                @elseif (Auth::check())
+                    @if ($todayAttendance && $todayAttendance->status === $attendanceStatuses['done'])
+                        {{-- 一般ユーザー用退勤時ヘッダー --}}
+                        @include('partials.header.header-user-checkedout')
+                    @else
+                        {{-- 一般ユーザー用ヘッダー --}}
+                        @include('partials.header.header-user')
+                    @endif
                 @endif
             @endif
         </header>

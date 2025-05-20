@@ -8,6 +8,7 @@
     background-color: #F0EFF2;
 }
 
+/* 出勤登録フォーム */
 .attendance__status {
     display: flex;
     justify-content: center;

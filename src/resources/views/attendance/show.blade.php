@@ -138,7 +138,6 @@
 // 時計のデフォルト表示を制限
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('input[type="time"]').forEach(input => {
-        // ページ読み込み時に空なら色を透明に
         if (!input.value) {
             input.style.color = 'transparent';
         }
@@ -152,12 +151,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // フォーカス時は色を黒に（透明解除）
         input.addEventListener('focus', () => {
             input.style.color = '';
         });
 
-        // フォーカスアウト時は値がなければ透明に戻す
         input.addEventListener('blur', () => {
             if (!input.value) {
                 input.style.color = 'transparent';

@@ -103,6 +103,7 @@ class AttendanceController extends Controller
             ->first();
     }
 
+    // 日付変更時の退勤処理
     private function autoClosePastAttendances()
     {
         $userId = Auth::id();
@@ -115,7 +116,6 @@ class AttendanceController extends Controller
             ->each(function ($attendance) {
                 $attendance->status = Attendance::STATUS_DONE;
                 if (!$attendance->end_time) {
-                    // 退勤時間がなければ日付の終わりに設定（例：23:59:59）
                     $attendance->end_time = $attendance->date->copy()->endOfDay();
                 }
                 $attendance->save();

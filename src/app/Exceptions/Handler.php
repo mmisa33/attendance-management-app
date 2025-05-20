@@ -40,12 +40,13 @@ class Handler extends ExceptionHandler
         });
     }
 
+    // 未認証のユーザーがアクセスした際の処理
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        foreach ($exception->guards() as $guard) {
-            if ($guard === 'admin') {
-                return redirect()->guest(route('admin.login'));
-            }
+        $guard = $exception->guards()[0] ?? session('last_auth_guard');
+
+        if ($guard === 'admin') {
+            return redirect()->guest(route('admin.login'));
         }
 
         return redirect()->guest(route('login'));

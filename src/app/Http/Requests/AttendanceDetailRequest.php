@@ -68,10 +68,10 @@ class AttendanceDetailRequest extends FormRequest
     // 本日出勤中であればエラー
     private function validateIfNotInWork($validator)
     {
-        $inputDate = $this->input('work_date'); // リクエストの対象日付
+        $inputDate = $this->input('work_date');
         $today = date('Y-m-d');
 
-        // 出勤中制限は「本日」のみ
+        // 本日中のみ出勤中の修正を制限
         if ($inputDate === $today) {
             $attendanceId = $this->route('id');
             $attendance = Attendance::find($attendanceId);

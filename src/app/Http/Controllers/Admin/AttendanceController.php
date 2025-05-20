@@ -34,7 +34,7 @@ class AttendanceController extends Controller
         ]);
     }
 
-    // スタッフの勤怠一覧表示
+    // スタッフの勤怠一覧ページを表示
     public function showStaffAttendance(Request $request, $id)
     {
         $staff = User::findOrFail($id);
