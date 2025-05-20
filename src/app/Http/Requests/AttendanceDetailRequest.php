@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Attendance;
 use Carbon\Carbon;
 
 class AttendanceDetailRequest extends FormRequest
@@ -64,16 +65,20 @@ class AttendanceDetailRequest extends FormRequest
         });
     }
 
-    // 出勤中であればエラー
+    // 本日出勤中であればエラー
     private function validateIfNotInWork($validator)
     {
-        $userId = auth()->id();
-        $isInWork = \App\Models\Attendance::where('user_id', $userId)
-            ->whereNull('end_time')
-            ->exists();
+        $inputDate = $this->input('work_date'); // リクエストの対象日付
+        $today = date('Y-m-d');
 
-        if ($isInWork) {
-            $validator->errors()->add('start_time', '出勤中は修正できません');
+        // 出勤中制限は「本日」のみ
+        if ($inputDate === $today) {
+            $attendanceId = $this->route('id');
+            $attendance = Attendance::find($attendanceId);
+
+            if ($attendance && $attendance->status !== Attendance::STATUS_DONE) {
+                $validator->errors()->add('start_time', '出勤中は修正できません');
+            }
         }
     }
 

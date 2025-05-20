@@ -13,6 +13,7 @@ class AttendanceController extends Controller
     // 勤怠登録ページを表示
     public function index()
     {
+        $this->autoClosePastAttendances();
         $attendance = $this->getTodayAttendance();
         $now = Carbon::now();
 
@@ -100,6 +101,25 @@ class AttendanceController extends Controller
             ->ofMonth(Carbon::today()->format('Y-m'))
             ->whereDate('date', Carbon::today())
             ->first();
+    }
+
+    private function autoClosePastAttendances()
+    {
+        $userId = Auth::id();
+        $today = Carbon::today();
+
+        Attendance::where('user_id', $userId)
+            ->whereDate('date', '<', $today)
+            ->where('status', '!=', Attendance::STATUS_DONE)
+            ->get()
+            ->each(function ($attendance) {
+                $attendance->status = Attendance::STATUS_DONE;
+                if (!$attendance->end_time) {
+                    // 退勤時間がなければ日付の終わりに設定（例：23:59:59）
+                    $attendance->end_time = $attendance->date->copy()->endOfDay();
+                }
+                $attendance->save();
+            });
     }
 
     // 勤怠一覧ページを表示

@@ -12,6 +12,7 @@
     <form class="attendance-detail__form" method="POST"
         action="{{ route('attendance.update', ['id' => $attendance->id]) }}" novalidate>
         @csrf
+        <input type="hidden" name="work_date" value="{{ $attendance->date }}">
 
         <table class="attendance-detail__table">
             {{-- 名前 --}}
