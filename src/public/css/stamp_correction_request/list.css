@@ -47,6 +47,7 @@ body {
     font-weight: bold;
     font-size: 16px;
     color: #737373;
+    table-layout: fixed;
 }
 
 .request-list__header {
@@ -57,6 +58,9 @@ body {
 .request-list__content {
     padding: 10px 20px;
     border-bottom: 2px solid #E1E1E1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .request-list__table tr:last-child td {
@@ -77,18 +81,11 @@ body {
         justify-content: center;
     }
 
-    .request-list__table {
-        table-layout: fixed;
-    }
-
     .request-list__header {
         padding: 10px 3px;
     }
 
     .request-list__content {
         padding: 10px 3px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 }

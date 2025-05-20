@@ -129,7 +129,7 @@ input[type="time"] {
     background-color: #000000;
 }
 
-/* 申請中 */
+/* 申請中・承認後 */
 .attendance-detail__content.modified input,
 .attendance-detail__content--textarea.modified .content__textarea {
     border: none;
@@ -137,9 +137,7 @@ input[type="time"] {
 }
 
 .attendance-detail__content--textarea.modified .content__textarea {
-    padding: 10px 35px;
-    height: 60px;
-    line-height: 40px;
+    padding: 10px 30px;
 }
 
 .attendance-detail__alert-message {

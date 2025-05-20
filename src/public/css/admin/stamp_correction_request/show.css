@@ -87,6 +87,11 @@ body {
     width: 60%;
 }
 
+/* 申請中・承認後 */
+.attendance-detail__content.modified input {
+    border: none;
+}
+
 /* 承認ボタン */
 .approval-detail__btn,
 .attendance-detail__status--approved {

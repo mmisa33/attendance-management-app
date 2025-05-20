@@ -69,6 +69,7 @@ body {
     font-weight: bold;
     font-size: 16px;
     color: #737373;
+    table-layout: fixed;
 }
 
 .admin-attendance-list__header {
@@ -79,6 +80,9 @@ body {
 .admin-attendance-list__content {
     padding: 10px 20px;
     border-bottom: 2px solid #E1E1E1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .admin-attendance-list__table tr:last-child td {
@@ -101,8 +105,5 @@ body {
 
     .admin-attendance-list__content {
         padding: 10px 15px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 }

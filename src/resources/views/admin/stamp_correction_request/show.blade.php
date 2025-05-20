@@ -46,7 +46,11 @@
                     </th>
                     <td class="approval-detail__content approval-detail__content--time">
                         <span class="content__time">{{ $breakRow['start'] }}</span>
-                        <span class="content__time-separator">～</span>
+
+                        @if (!$attendance->is_modified || $breakRow['start'])
+                            <span class="content__time-separator">～</span>
+                        @endif
+
                         <span class="content__time">{{ $breakRow['end'] }}</span>
                     </td>
                 </tr>
