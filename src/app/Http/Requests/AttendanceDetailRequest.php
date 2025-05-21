@@ -129,7 +129,7 @@ class AttendanceDetailRequest extends FormRequest
     private function checkBreakTimeOrder($validator, $breakStart, $breakEnd, $index)
     {
         if (Carbon::parse($breakStart)->greaterThanOrEqualTo(Carbon::parse($breakEnd))) {
-            $validator->errors()->add("break_start.$index", '休憩時間が不適切です');
+            $validator->errors()->add("break_start.$index", '休憩時間が不適切な値です');
         }
     }
 
