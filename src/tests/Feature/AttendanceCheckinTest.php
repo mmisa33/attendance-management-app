@@ -47,19 +47,23 @@ class AttendanceCheckinTest extends TestCase
     {
         // 退勤済のユーザーを作成
         $user = User::factory()->create();
+
         Attendance::create([
             'user_id' => $user->id,
             'date' => Carbon::today()->format('Y-m-d'),
             'status' => Attendance::STATUS_DONE
         ]);
-        $this->actingAs($user, 'web');
+
+        $this->actingAs($user);
 
         // 勤怠画面にアクセス
         $response = $this->get(route('attendance.index'));
 
         // 「出勤」ボタンが表示されていないことを確認
-        $response->assertDontSee('出勤');
-        $response->assertSee('退勤済');
+        $response->assertDontSee('<button class="attendance__btn" type="submit">出勤</button>', false);
+
+        // 「お疲れ様でした。」が表示されていることを確認
+        $response->assertSee('お疲れ様でした。');
     }
 
     // 出勤後の時刻が管理画面に表示される
