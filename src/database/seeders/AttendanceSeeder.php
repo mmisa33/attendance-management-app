@@ -13,14 +13,11 @@ class AttendanceSeeder extends Seeder
     public function run()
     {
         $users = User::all();
-        $today = Carbon::today();
 
         foreach ($users as $user) {
             // 4月分の勤怠
-            foreach (range(1, $today->day - 1) as $day) {
+            foreach (range(1, 30) as $day) {
                 $date = Carbon::create(2025, 4, $day);
-                if ($date->isFuture()) break;
-
                 $this->createAttendanceForDate($user, $date);
             }
 
@@ -76,7 +73,7 @@ class AttendanceSeeder extends Seeder
                     'break_end' => $break_end,
                 ]);
 
-                // 次の休憩開始はこの休憩終了から最低30分後にセット
+                // 次の休憩開始は前の休憩終了から最低30分後にセット
                 $currentBreakStart = $break_end->copy()->addMinutes(30);
 
                 // 次の休憩開始が退勤時間を超えたらループを終了

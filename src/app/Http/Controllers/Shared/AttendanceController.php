@@ -42,7 +42,7 @@ class AttendanceController extends Controller
             $attendance->updateAttendance($validated, true);
             $attendance->is_approved = true;
             $attendance->save();
-            $redirectRoute = 'admin.attendance.list';
+            $redirectRoute = 'stamp_correction_request.list';
         } elseif (Auth::guard('web')->check()) {
             // 一般ユーザーがログインしている場合
             $attendance = Attendance::where('user_id', Auth::id())->findOrFail($id);
@@ -50,7 +50,7 @@ class AttendanceController extends Controller
             $attendance->is_modified = true;
             $attendance->request_date = now();
             $attendance->save();
-            $redirectRoute = 'attendance.list';
+            $redirectRoute = 'stamp_correction_request.list';
         } else {
             // ログインしていない場合はログインページへリダイレクト
             return redirect()->route('login');
