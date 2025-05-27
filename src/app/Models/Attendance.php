@@ -122,15 +122,25 @@ class Attendance extends Model
         return $breakRows;
     }
 
-    // 退勤後のみ休憩時間の合計を「時間:分」形式で表示
+    // 休憩時間の合計を「時間:分」形式で表示
     public function getTotalBreakTimeAttribute()
     {
-        if ($this->status !== self::STATUS_DONE) {
-            return ''; // 退勤していない場合は空白にする
+        // 出勤中、かつ休憩が一度も記録されていない場合
+        if ($this->status !== self::STATUS_DONE && $this->breakTimes->isEmpty()) {
+            return '';
         }
 
-        $totalBreakMinutes = $this->calculateTotalBreakTime($this->breakTimes);
+        // 現在休憩中で休憩終了が押されていない場合
+        $hasStartedBreak = $this->breakTimes->contains(function ($break) {
+            return $break->break_start && is_null($break->break_end);
+        });
 
+        if ($hasStartedBreak) {
+            return '0:00';
+        }
+
+        // 退勤済み、または正常に終了された休憩がある場合に合計休憩時間を計算
+        $totalBreakMinutes = $this->calculateTotalBreakTime($this->breakTimes);
         $hours = floor($totalBreakMinutes / self::MINUTES_IN_HOUR);
         $minutes = $totalBreakMinutes % self::MINUTES_IN_HOUR;
 
@@ -153,10 +163,14 @@ class Attendance extends Model
     private function calculateTotalBreakTime($breakTimes)
     {
         return $breakTimes->reduce(function ($carry, $breakTime) {
-            if ($breakTime->break_start && $breakTime->break_end) {
-                $carry += Carbon::parse($breakTime->break_start)
-                    ->diffInMinutes(Carbon::parse($breakTime->break_end));
+            $start = $breakTime->break_start;
+            $end = $breakTime->break_end;
+
+            // 開始・終了が両方ある場合のみ計算
+            if ($start && $end) {
+                $carry += Carbon::parse($start)->diffInMinutes(Carbon::parse($end));
             }
+
             return $carry;
         }, 0);
     }
