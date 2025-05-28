@@ -1,64 +1,129 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# coachtech 勤怠管理アプリ
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 概要
+このプロジェクトは、Laravelを使用した勤怠管理アプリです。  
+Dockerを利用した環境構築が可能で、MySQLデータベースを使用しています。  
+ユーザー登録、ログイン、打刻、勤怠の閲覧・修正申請、管理者による承認機能など、勤怠管理アプリに必要な基本機能を実装しています。
 
-## About Laravel
+## 環境構築
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### **Dockerビルド**
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. リポジトリをクローン
+   ```bash
+   git clone git@github.com:mmisa33/flea-market-app.git
+2. プロジェクトフォルダに移動
+    ```bash
+    cd flea-market-app
+3. Dockerコンテナをビルドして起動
+    ```bash
+    docker-compose up -d --build
+> **⚠ 注意**  
+> MySQLはOSによって起動しない場合があるので、それぞれのPCに合わせて `docker-compose.yml` ファイルを編集してください。
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### **Laravel環境構築**
 
-## Learning Laravel
+1. PHPコンテナに入る
+   ```bash
+   docker-compose exec php bash
+2. 必要な依存関係をインストール
+    ```bash
+    composer install
+3. .env.example ファイルから .env を作成
+    ```bash
+    cp .env.example .env
+4. .env ファイルの環境変数を変更
+    ```bash
+    # データベース設定
+    DB_CONNECTION=mysql
+    DB_HOST=mysql
+    DB_PORT=3306
+    DB_DATABASE=laravel_db
+    DB_USERNAME=laravel_user
+    DB_PASSWORD=laravel_pass
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+    # MailHog設定（開発用メール確認ツール）
+    MAIL_MAILER=smtp
+    MAIL_HOST=mailhog
+    MAIL_PORT=1025
+    MAIL_USERNAME=null
+    MAIL_PASSWORD=null
+    MAIL_ENCRYPTION=null
+    MAIL_FROM_ADDRESS=no-reply@example.com
+    MAIL_FROM_NAME="FleaMarketApp"
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+    # Stripe設定 (テスト用APIキーを使用)
+    STRIPE_KEY=[pk_test_XXXXXXXXXXXXXXXXX]  # []に取得した公開可能キーを記載
+    STRIPE_SECRET=[sk_test_XXXXXXXXXXXXXXXXX]  # []に取得した秘密キーを記載
+5. アプリケーションキーを生成
+   ```bash
+   php artisan key:generate
+6. データベースをマイグレーション
+   ```bash
+   php artisan migrate
+7. データベースに初期データを挿入
+   ```bash
+   php artisan db:seed
+   ```
+    > **💡 補足**
+    > - `CategoriesTableSeeder` は、アプリの動作に必須のカテゴリーデータを挿入するため、**必ず実行が必要**です。
+    > - `UsersTableSeeder` や `ItemsTableSeeder` など、その他のシーダーは、アプリを実際に使用しているように見せる**サンプルデータ**を挿入します。
+    > - 本番環境では `CategoriesTableSeeder` のみを使い、他は開発やテスト時に利用することを想定しています。
 
-## Laravel Sponsors
+## サンプルアカウント（ログイン用）
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+本アプリには、`UsersTableSeeder`にあらかじめメール認証済みのログイン用ユーザーが3名登録されています。  
+開発時や動作確認にご利用ください。
 
-### Premium Partners
+- ログインURL：[http://localhost/login](http://localhost/login)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### 🔐 サンプルユーザー情報
 
-## Contributing
+ - **田中 太郎**
+   - Email: `taro@example.com`
+   - Password: `password123`
+ - **鈴木 次郎**
+   - Email: `jiro@example.com`
+   - Password: `password123`
+ - **佐藤 花子**
+   - Email: `hanako@example.com`
+   - Password: `password123`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 使用技術
+- PHP 7.4.9
+- Laravel 8.83.8
+- MySQL 10.3.39 (MariaDB)
+- Laravel Fortify（ユーザー認証機能）
+- MailHog（ローカル環境におけるメール送信確認ツール）
+- Stripe（オンライン決済機能）
 
-## Code of Conduct
+## テスト
+本アプリでは、**PHPUnit** を用いた自動テストを導入しています。  
+実装された機能ごとに、主要なユースケースを想定したテストケースを用意しており、品質の担保を目的としています。
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- Laravelの`RefreshDatabase`トレイトを活用し、テスト実行ごとにクリーンな状態で検証を実施
+- テストはすべて**案件シート＜テストケース一覧＞**に記載された要件をもとに作成
 
-## Security Vulnerabilities
+### **テスト実行**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. PHPコンテナに入る
+   ```bash
+   docker-compose exec php bash
+2. マイグレーションをリセットし、再実行
+    ```bash
+    php artisan migrate:refresh --seed
+3. テストを実行
+    ```bash
+    php artisan test
+   ```
+    > **💡 補足**
+    > - `php artisan migrate:refresh --seed`は、マイグレーションをリセットし、再実行するコマンドです。テスト実行前に、クリーンなデータベース状態を整えるために必要です。  
+    > - テスト実行後、データベースの状態が変更される可能性があるため、再度テストを実行する際には上記の手順を繰り返してください。
 
-## License
+## ER図
+![er_contact_form](ER_flea-market-app.png)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## URL
+- 開発環境： [http://localhost/](http://localhost/)
+- phpMyAdmin： [http://localhost:8080/](http://localhost:8080/)
+- MailHog（開発用メール確認ツール）： [http://localhost:8025/](http://localhost:8025/)

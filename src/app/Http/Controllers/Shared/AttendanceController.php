@@ -42,6 +42,7 @@ class AttendanceController extends Controller
             $attendance->updateAttendance($validated, true);
             $attendance->is_modified = true;
             $attendance->is_approved = true;
+            $attendance->request_date = now();
             $attendance->save();
             $redirectRoute = 'stamp_correction_request.list';
         } elseif (Auth::guard('web')->check()) {
