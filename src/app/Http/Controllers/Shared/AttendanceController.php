@@ -40,6 +40,7 @@ class AttendanceController extends Controller
             // 管理者がログインしている場合
             $attendance = Attendance::findOrFail($id);
             $attendance->updateAttendance($validated, true);
+            $attendance->is_modified = true;
             $attendance->is_approved = true;
             $attendance->save();
             $redirectRoute = 'stamp_correction_request.list';
