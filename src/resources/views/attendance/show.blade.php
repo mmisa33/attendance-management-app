@@ -102,10 +102,12 @@
             {{-- 備考 --}}
             <tr class="attendance-detail__row">
                 <th class="attendance-detail__header" for="note">備考</th>
-                <td
-                    class="attendance-detail__content attendance-detail__content--textarea
-                @if ($attendance->is_modified) modified @endif">
-                    <textarea class="content__textarea" name="note" id="note" rows="2" @if ($attendance->is_modified) disabled @endif>{{ old('note', $attendance->note) }}</textarea>
+                <td class="attendance-detail__content attendance-detail__content--textarea @if ($attendance->is_modified) modified @endif">
+                    @if ($attendance->is_modified)
+                        <p class="content__text">{{ $attendance->note }}</p>
+                    @else
+                        <textarea class="content__textarea" name="note" id="note" rows="2">{{ old('note', $attendance->note) }}</textarea>
+                    @endif
 
                     {{-- エラーメッセージ --}}
                     @error('note')
