@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Carbon;
 use App\Models\User;
 
-class UserSeeder extends Seeder
+class UsersTableSeeder extends Seeder
 {
     public function run()
     {

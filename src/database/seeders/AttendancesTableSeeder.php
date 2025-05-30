@@ -8,7 +8,7 @@ use App\Models\Attendance;
 use App\Models\BreakTime;
 use App\Models\User;
 
-class AttendanceSeeder extends Seeder
+class AttendancesTableSeeder extends Seeder
 {
     public function run()
     {

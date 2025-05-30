@@ -11,10 +11,10 @@ Dockerを利用した環境構築が可能で、MySQLデータベースを使用
 
 1. リポジトリをクローン
    ```bash
-   git clone git@github.com:mmisa33/flea-market-app.git
+   git clone git@github.com:mmisa33/attendance-management-app
 2. プロジェクトフォルダに移動
     ```bash
-    cd flea-market-app
+    cd attendance-management-app
 3. Dockerコンテナをビルドして起動
     ```bash
     docker-compose up -d --build
@@ -50,11 +50,7 @@ Dockerを利用した環境構築が可能で、MySQLデータベースを使用
     MAIL_PASSWORD=null
     MAIL_ENCRYPTION=null
     MAIL_FROM_ADDRESS=no-reply@example.com
-    MAIL_FROM_NAME="FleaMarketApp"
-
-    # Stripe設定 (テスト用APIキーを使用)
-    STRIPE_KEY=[pk_test_XXXXXXXXXXXXXXXXX]  # []に取得した公開可能キーを記載
-    STRIPE_SECRET=[sk_test_XXXXXXXXXXXXXXXXX]  # []に取得した秘密キーを記載
+    MAIL_FROM_NAME="AttendanceManagementApp"
 5. アプリケーションキーを生成
    ```bash
    php artisan key:generate
@@ -66,27 +62,40 @@ Dockerを利用した環境構築が可能で、MySQLデータベースを使用
    php artisan db:seed
    ```
     > **💡 補足**
-    > - `CategoriesTableSeeder` は、アプリの動作に必須のカテゴリーデータを挿入するため、**必ず実行が必要**です。
-    > - `UsersTableSeeder` や `ItemsTableSeeder` など、その他のシーダーは、アプリを実際に使用しているように見せる**サンプルデータ**を挿入します。
-    > - 本番環境では `CategoriesTableSeeder` のみを使い、他は開発やテスト時に利用することを想定しています。
+    > - `AdminsTableSeeder` は、アプリの動作に必須の管理者データを挿入するため、**必ず実行が必要**です。
+    > - `UsersTableSeeder` や `AttendancesTableSeeder` など、その他のシーダーは、アプリを実際に使用しているように見せる**サンプルデータ**を挿入します。
+    > - 本番環境では `AdminsTableSeeder` のみを使い、他は開発やテスト時に利用することを想定しています。
 
 ## サンプルアカウント（ログイン用）
 
-本アプリには、`UsersTableSeeder`にあらかじめメール認証済みのログイン用ユーザーが3名登録されています。  
+本アプリには、`UsersTableSeeder`にあらかじめメール認証済みのログイン用ユーザーが5名、及び管理者が1名登録されています。  
 開発時や動作確認にご利用ください。
 
-- ログインURL：[http://localhost/login](http://localhost/login)
+- ユーザー用ログインURL：[http://localhost/login](http://localhost/login)
+- 管理者用ログインURL：[http://localhost/admin/login](http://localhost/admin/login)
 
 ### 🔐 サンプルユーザー情報
 
- - **田中 太郎**
-   - Email: `taro@example.com`
+ - **島 裕子**
+   - Email: `shima@example.com`
+   - Password: `password123`
+ - **佐々木 蓮**
+   - Email: `sasaki@example.com`
+   - Password: `password123`
+ - **山田 太郎**
+   - Email: `yamada@example.com`
    - Password: `password123`
  - **鈴木 次郎**
-   - Email: `jiro@example.com`
+   - Email: `suzuki@example.com`
    - Password: `password123`
- - **佐藤 花子**
-   - Email: `hanako@example.com`
+ - **中村 加奈子**
+   - Email: `nakamura@example.com`
+   - Password: `password123`
+
+### 🔐 サンプル管理者情報
+
+ - **管理者**
+   - Email: `admin@example.com`
    - Password: `password123`
 
 ## 使用技術
@@ -95,7 +104,6 @@ Dockerを利用した環境構築が可能で、MySQLデータベースを使用
 - MySQL 10.3.39 (MariaDB)
 - Laravel Fortify（ユーザー認証機能）
 - MailHog（ローカル環境におけるメール送信確認ツール）
-- Stripe（オンライン決済機能）
 
 ## テスト
 本アプリでは、**PHPUnit** を用いた自動テストを導入しています。  
@@ -121,7 +129,7 @@ Dockerを利用した環境構築が可能で、MySQLデータベースを使用
     > - テスト実行後、データベースの状態が変更される可能性があるため、再度テストを実行する際には上記の手順を繰り返してください。
 
 ## ER図
-![er_contact_form](ER_flea-market-app.png)
+![er_attendance-management-app](ER_attendance-management-app.png)
 
 ## URL
 - 開発環境： [http://localhost/](http://localhost/)
