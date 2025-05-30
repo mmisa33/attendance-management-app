@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\User;
 
 use Tests\TestCase;
 use App\Models\User;
@@ -129,5 +129,33 @@ class AttendanceBreakTest extends TestCase
 
         // DBに2回分の休憩が記録されていることを確認
         $this->assertDatabaseCount('break_times', 2);
+    }
+
+    /** @test */
+    // 休憩時刻が勤怠一覧画面で確認できる
+    public function break_times_are_displayed_on_attendance_list()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // 出勤と休憩時間を設定
+        $this->post(route('attendance.startWork'));
+        $this->post(route('attendance.startBreak'));
+        sleep(1); // 微小時間経過させる
+        $this->post(route('attendance.endBreak'));
+
+        // 勤怠一覧画面を確認
+        $response = $this->get(route('attendance.index'));
+        $response->assertStatus(200);
+
+        $attendance = Attendance::where('user_id', $user->id)->first();
+        $break = $attendance->breakTimes()->first();
+
+        // 休憩時間が表示されていることを確認
+        $breakStartFormatted = Carbon::parse($break->break_start)->format('H:i');
+        $breakEndFormatted = Carbon::parse($break->break_end)->format('H:i');
+
+        $response->assertSee($breakStartFormatted);
+        $response->assertSee($breakEndFormatted);
     }
 }

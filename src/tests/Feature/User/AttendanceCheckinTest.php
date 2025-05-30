@@ -42,7 +42,7 @@ class AttendanceCheckinTest extends TestCase
     }
 
     /** @test */
-    // 同じ日に二度目の出勤はできない
+    //  出勤は一日一回のみできる
     public function test_checkin_button_is_disabled_after_one_checkin()
     {
         // 退勤済のユーザーを作成
@@ -66,6 +66,7 @@ class AttendanceCheckinTest extends TestCase
         $response->assertSee('お疲れ様でした。');
     }
 
+    /** @test */
     // 出勤後の時刻が管理画面に表示される
     public function test_checkin_time_is_visible_in_admin_view()
     {

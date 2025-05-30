@@ -1,13 +1,12 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature\User;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
-use Illuminate\Auth\Notifications\VerifyEmail;
 
 class EmailVerificationTest extends TestCase
 {

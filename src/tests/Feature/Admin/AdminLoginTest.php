@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature\Admin;
 
 use Tests\TestCase;
 use App\Models\Admin;

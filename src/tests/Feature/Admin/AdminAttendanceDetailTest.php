@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Admin;
 
 use Tests\TestCase;
 use App\Models\Attendance;
@@ -72,7 +72,7 @@ class AdminAttendanceDetailTest extends TestCase
     public function error_displayed_when_start_time_is_after_end_time()
     {
         $data = [
-            'start_time' => '18:00', // 開始時間が終了時間より後 → エラー
+            'start_time' => '18:00', // 開始時間が終了時間より後
             'end_time' => '09:00',
             'break_start' => ['12:00'],
             'break_end' => ['13:00'],
@@ -96,7 +96,7 @@ class AdminAttendanceDetailTest extends TestCase
         $data = [
             'start_time' => '09:00',
             'end_time' => '18:00',
-            'break_start' => ['19:00'],  // 休憩開始が勤務終了時間後 → エラー
+            'break_start' => ['19:00'],  // 休憩開始が勤務終了時間後
             'break_end' => ['19:30'],
             'note' => '備考',
         ];
@@ -119,7 +119,7 @@ class AdminAttendanceDetailTest extends TestCase
             'start_time' => '09:00',
             'end_time' => '18:00',
             'break_start' => ['17:30'],
-            'break_end' => ['19:00'],  // 休憩終了が勤務終了時間後 → エラー
+            'break_end' => ['19:00'],  // 休憩終了が勤務終了時間後
             'note' => '備考',
         ];
 
@@ -142,7 +142,7 @@ class AdminAttendanceDetailTest extends TestCase
             'end_time' => '18:00',
             'break_start' => ['12:00'],
             'break_end' => ['13:00'],
-            'note' => '', // 備考空欄 → エラー
+            'note' => '', // 備考空欄
         ];
 
         $response = $this->actingAs($this->admin, 'admin')
