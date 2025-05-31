@@ -11,7 +11,7 @@ Dockerを利用した環境構築が可能で、MySQLデータベースを使用
 
 1. リポジトリをクローン
    ```bash
-   git clone git@github.com:mmisa33/attendance-management-app
+   git clone git@github.com:mmisa33/attendance-management-app.git
 2. プロジェクトフォルダに移動
     ```bash
     cd attendance-management-app
@@ -25,7 +25,7 @@ Dockerを利用した環境構築が可能で、MySQLデータベースを使用
 
 1. PHPコンテナに入る
    ```bash
-   docker-compose exec php bash
+    docker-compose exec php bash
 2. 必要な依存関係をインストール
     ```bash
     composer install
