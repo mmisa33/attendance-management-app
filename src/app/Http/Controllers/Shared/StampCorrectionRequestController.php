@@ -16,11 +16,13 @@ class StampCorrectionRequestController extends Controller
             $pendingRequests = Attendance::where('is_modified', true)
                 ->where('is_approved', false)
                 ->with('user')
+                ->orderBy('date', 'asc')
                 ->orderBy('request_date', 'asc')
                 ->get();
 
             $approvedRequests = Attendance::where('is_approved', true)
                 ->with('user')
+                ->orderBy('date', 'asc')
                 ->orderBy('request_date', 'asc')
                 ->get();
         } elseif (Auth::guard('web')->check()) {
@@ -31,12 +33,14 @@ class StampCorrectionRequestController extends Controller
                 ->where('is_modified', true)
                 ->where('is_approved', false)
                 ->with('user')
+                ->orderBy('date', 'asc')
                 ->orderBy('request_date', 'asc')
                 ->get();
 
             $approvedRequests = Attendance::where('user_id', $userId)
                 ->where('is_approved', true)
                 ->with('user')
+                ->orderBy('date', 'asc')
                 ->orderBy('request_date', 'asc')
                 ->get();
         } else {
