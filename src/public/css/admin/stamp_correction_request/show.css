@@ -95,6 +95,9 @@ body {
 /* 承認ボタン */
 .approval-detail__btn,
 .attendance-detail__status--approved {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 130px;
     height: 50px;
     margin-top: 110px;
@@ -110,9 +113,6 @@ body {
 }
 
 .attendance-detail__status--approved {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background-color: #696969;
 }
 
