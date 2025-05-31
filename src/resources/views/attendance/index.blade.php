@@ -59,6 +59,9 @@
 </div>
 
 <script>
+    // 1分をミリ秒で定義
+    const ONE_MINUTE_IN_MS = 60 * 1000;
+
     // 時間を分単位で自動更新
     function updateTime() {
         const timeElement = document.getElementById('current-time');
@@ -68,8 +71,14 @@
         timeElement.textContent = `${hours}:${minutes}`;
     }
 
-    // 1分ごとに時間を更新
-    const UPDATE_INTERVAL_MS = 60 * 1000; // 60秒 = 1分
-    setInterval(updateTime, UPDATE_INTERVAL_MS);
+    updateTime();
+
+    const now = new Date();
+    const delayUntilNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+
+    setTimeout(() => {
+        updateTime();
+        setInterval(updateTime, ONE_MINUTE_IN_MS);
+    }, delayUntilNextMinute);
 </script>
 @endsection
